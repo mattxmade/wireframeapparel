@@ -32,17 +32,17 @@ describe("Nav component test suite", () => {
     expect(navItems.length).toEqual(paths.length);
   });
 
-  it("Renders NavLink components with expected paths", async () => {
+  it("Renders NavLink components with expected paths", () => {
     render(
       <BrowserRouter>
         <NavBar paths={paths} />
       </BrowserRouter>
     );
 
-    const navLinks = await screen.findAllByRole("link");
+    const navLinks = screen.getAllByRole("link");
     expect(navLinks.length).toEqual(paths.length);
 
-    await navLinks.map((link, index) => {
+    navLinks.map((link, index) => {
       const currentPath = paths[index];
       const href = link.href;
 
