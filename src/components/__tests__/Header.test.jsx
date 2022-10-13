@@ -46,7 +46,7 @@ describe("Header Component tests", () => {
     );
 
     const heading = screen.getByRole("heading");
-    expect(heading.textContent).toMatch(/wireframe apparel/i);
+    expect(heading.textContent.toLowerCase()).toBe("wireframe apparel");
   });
 
   it("Renders image", () => {
@@ -59,10 +59,6 @@ describe("Header Component tests", () => {
     );
 
     const image = screen.getByRole("img");
-    expect(image.alt).toMatch(/wireframe apparel/i);
-  });
-
-  it("Throws error if props.children node is undefined", () => {
-    expect(() => render(<Header></Header>)).toThrow();
+    expect(image.alt.toLowerCase()).toBe("wireframe apparel logo");
   });
 });
