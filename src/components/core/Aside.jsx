@@ -46,8 +46,6 @@ const Aside = ({ category, updateProductType }) => {
             updateProductType={updateProductType}
           />
 
-          {/* <CategoryItem title="Mugs" updateProductType={updateProductType} /> */}
-
           <CategoryItem
             title="Skateboards"
             updateProductType={updateProductType}
@@ -56,9 +54,6 @@ const Aside = ({ category, updateProductType }) => {
           <CategoryItem title="Customs" updateProductType={updateProductType} />
 
           <CategoryItem title="Other" updateProductType={updateProductType} />
-
-          {/* <CategoryItem title="Brand" updateProductType={updateProductType}/>  */}
-          {/* <CategoryItem title="Footwear" updateProductType={updateProductType}/> */}
         </ul>
       </div>
     </aside>
