@@ -1,7 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AwesomeSvg from "../svg-icons/Awesome.module";
+import LocalStorage from "../../data/LocalStorage.module";
 
 const Dropdown = ({ children, handleSetSort, handleSortProductsBy }) => {
+  const restoreSelection = LocalStorage.get("sort");
+
+  useEffect(() => {
+    if (restoreSelection) {
+      setSelection(restoreSelection);
+
+      setTimeout(() => {
+        handleSetSort(true);
+        handleSortProductsBy(restoreSelection);
+      }, 0);
+    }
+  }, []);
+
   const [toggleDropdown, setToggleDropdown] = useState(false);
   const [selection, setSelection] = useState(children[0]);
 
