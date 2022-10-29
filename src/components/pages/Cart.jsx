@@ -15,8 +15,9 @@ function fixPrice(price) {
   return isLastDigit === "0" ? fixedToOne : fixedToTwo;
 }
 
-const CartItem = ({ item }) => {
+const CartItem = (props) => {
   const TrashSvg = AwesomeSvg.Trash;
+  const { item, index, handleCartItem } = props;
 
   return (
     <Fragment>
@@ -28,7 +29,7 @@ const CartItem = ({ item }) => {
             {item.name} {depluraliseString(item.type.kind)}
           </p>
         </li>
-        <li>
+        <li onClick={() => handleCartItem(index, "remove")}>
           <TrashSvg className="cart-icon" />
           <p>{item.quantity}</p>
           <p>{"£" + fixPrice(item.price * item.quantity)}</p>
@@ -38,7 +39,7 @@ const CartItem = ({ item }) => {
   );
 };
 
-const Cart = ({ itemsInCart, updateItemsInCart }) => {
+const Cart = ({ itemsInCart, handleCartItem }) => {
   let priceTotal = 0;
   let totalNumberOfItems = 0;
 
@@ -62,13 +63,14 @@ const Cart = ({ itemsInCart, updateItemsInCart }) => {
           {/* TODO: render placeholder if no items in cart */}
 
           {itemsInCart.length
-            ? itemsInCart.map((item) => {
+            ? itemsInCart.map((item, index) => {
                 fixPrice((priceTotal += item.price * item.quantity));
                 return (
                   <CartItem
                     key={item.id}
                     item={item}
-                    updateItemsInCart={updateItemsInCart}
+                    index={index}
+                    handleCartItem={handleCartItem}
                   />
                 );
               })
@@ -142,5 +144,5 @@ export default Cart;
 
 CartItem.propTypes = {
   itemsInCart: PropTypes.array,
-  updateItemsInCart: PropTypes.func,
+  handleCartItem: PropTypes.func,
 };
