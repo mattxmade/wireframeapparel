@@ -68,4 +68,4 @@ describe("Dropdown Component unit tests", () => {
   });
 });
 
-// [1] returns textContent with whitespace at the end
+// [1] trim() used throughout as textContent returns with whitespace at the end
