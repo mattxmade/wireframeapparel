@@ -1,4 +1,6 @@
+import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
+
 import AwesomeSvg from "../svg-icons/Awesome.module";
 import LocalStorage from "../../data/LocalStorage.module";
 
@@ -79,6 +81,12 @@ const Dropdown = ({ children, handleSetSort, handleSortProductsBy }) => {
         ))}
     </ul>
   );
+};
+
+Dropdown.propTypes = {
+  children: PropTypes.node,
+  handleSetSort: PropTypes.func,
+  handleSortProductsBy: PropTypes.func,
 };
 
 export default Dropdown;
