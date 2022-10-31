@@ -52,18 +52,20 @@ describe("Dropdown Component unit tests", () => {
     const toggleDropdown = screen.getByRole("listitem");
 
     await user.click(toggleDropdown);
-    const dropdownOptionsOpen = await screen.findAllByRole("listitem");
+    const dropdownOpen = await screen.findAllByRole("listitem");
 
-    const optionFromDropdown = await dropdownOptionsOpen[
-      Math.floor(Math.random() * dropdownOptionsOpen.length)
+    const option = await props.children.map((item, index) => index + 1)[
+      Math.floor(Math.random() * props.children.length)
     ];
 
-    await user.click(optionFromDropdown);
-    const dropdownOptionsClosed = await screen.findAllByRole("listitem");
+    const elementFromDropdown = dropdownOpen[option];
 
-    expect(dropdownOptionsClosed.length).toEqual(1);
-    expect(dropdownOptionsClosed[0].textContent.trim()).toBe(
-      optionFromDropdown.textContent
+    await user.click(dropdownOpen[option]);
+    const dropdownClose = await screen.findAllByRole("listitem");
+
+    expect(dropdownClose.length).toEqual(1);
+    expect(dropdownClose[0].textContent.trim()).toBe(
+      elementFromDropdown.textContent
     );
   });
 });
