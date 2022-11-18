@@ -33,8 +33,6 @@ const ProductFilters = ({
     }
   });
 
-  const CloseIcon = AwesomeSvg.CircleXMark;
-
   return (
     <ul ref={listRef} className="category">
       <li className="category-stem" />
@@ -91,6 +89,8 @@ ProductFilters.propTypes = {
 };
 
 const Aside = ({ view, category, updateProductType, handleProductFilter }) => {
+  const asideRef = useRef();
+
   const categoryFromStorage =
     view === "browse"
       ? LocalStorage.get("category")?.browse
@@ -129,10 +129,22 @@ const Aside = ({ view, category, updateProductType, handleProductFilter }) => {
     }
   }, [activeElement]);
 
+  const CloseIcon = AwesomeSvg.CircleXMark;
+  const closeAside = (e) => {
+    asideRef.current.parentNode.classList.add("sidebar--close");
+  };
+
   return (
-    <aside className="aside--catalog">
+    <aside ref={asideRef} className="aside--catalog">
       <h2>// Filters</h2>
-      <CloseIcon className="close-aside" />
+
+      <i
+        className="aside--catalog__close-icon fa-circle-xmark"
+        onClick={closeAside}
+      >
+        <CloseIcon />
+      </i>
+
       <div className="aside--catalog__div">
         <h3>Category</h3>
         <ul>
