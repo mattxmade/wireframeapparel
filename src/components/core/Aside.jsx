@@ -1,9 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 
 import AwesomeSvg from "../svg-icons/Awesome.module";
 import productCategories from "../../data/product.categories";
 import LocalStorage from "../../data/LocalStorage.module";
+
+import "../../styles/Aside.style.css";
 
 const ProductFilters = ({
   title,
@@ -14,6 +16,8 @@ const ProductFilters = ({
   handleProductFilter,
 }) => {
   const listRef = useRef();
+  const [viewSidebar, setViewSidebar] = useState(false);
+
   const filters = subcategories;
   const categoryTitle = title.toLowerCase();
 
@@ -129,42 +133,65 @@ const Aside = ({ view, category, updateProductType, handleProductFilter }) => {
     }
   }, [activeElement]);
 
-  const CloseIcon = AwesomeSvg.CircleXMark;
+  const handleViewportSize = (e) => {
+    if (window.innerWidth >= 609) {
+      asideRef.current.classList.remove("aside-close");
+      asideRef.current.classList.add("aside-open");
+      return;
+    }
+
+    asideRef.current.classList.remove("aside-open");
+    asideRef.current.classList.add("aside-close");
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", handleViewportSize);
+
+    return () => {
+      window.removeEventListener("resize", handleViewportSize);
+    };
+  }, []);
+
+  const CloseIcon = AwesomeSvg.CircleXMarkIcon;
   const closeAside = (e) => {
-    asideRef.current.parentNode.classList.add("sidebar--close");
+    asideRef.current.classList.add("aside-close");
   };
 
   return (
-    <aside ref={asideRef} className="aside--catalog">
-      <h2>// Filters</h2>
+    <aside className="aside-close" ref={asideRef}>
+      {console.count("Aside render")}
+      <div className="aside--content">
+        <h2>// Filters</h2>
 
-      <i
-        className="aside--catalog__close-icon fa-circle-xmark"
-        onClick={closeAside}
-      >
-        <CloseIcon />
-      </i>
+        <i
+          style={{ cursor: "pointer" }}
+          className="close-icon fa-circle-xmark"
+          onClick={(e) => closeAside(e)}
+        >
+          <CloseIcon />
+        </i>
 
-      <div className="aside--catalog__div">
-        <h3>Category</h3>
-        <ul>
-          {categoryItems.map((category, index) => {
-            const [categoryTitle, subcategories] = category;
+        <div className="aside--content__filters">
+          <h3>Category</h3>
+          <ul>
+            {categoryItems.map((category, index) => {
+              const [categoryTitle, subcategories] = category;
 
-            return (
-              <li key={index}>
-                <ProductFilters
-                  title={categoryTitle}
-                  active={activeElement}
-                  subcategories={subcategories}
-                  updateProductType={updateProductType}
-                  handleActiveElement={handleActiveElement}
-                  handleProductFilter={handleProductFilter}
-                />
-              </li>
-            );
-          })}
-        </ul>
+              return (
+                <li key={index}>
+                  <ProductFilters
+                    title={categoryTitle}
+                    active={activeElement}
+                    subcategories={subcategories}
+                    updateProductType={updateProductType}
+                    handleActiveElement={handleActiveElement}
+                    handleProductFilter={handleProductFilter}
+                  />
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       </div>
     </aside>
   );
