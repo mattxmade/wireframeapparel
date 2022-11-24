@@ -1,7 +1,7 @@
 import React from "react";
 
 const MaterialSvg = (() => {
-  const BasketIcon = (props) => (
+  const CartIcon = (props) => (
     <svg
       className={props && props.className ? props.className : ""}
       xmlns="http://www.w3.org/2000/svg"
@@ -22,7 +22,7 @@ const MaterialSvg = (() => {
     </svg>
   );
 
-  return { BasketIcon };
+  return { CartIcon };
 })();
 
 export default MaterialSvg;
