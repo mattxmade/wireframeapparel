@@ -1,77 +1,31 @@
-import React, { Fragment, useEffect, useLayoutEffect, useState } from "react";
+import React, { Fragment, useState } from "react";
 import {
   Routes,
   Route,
   useNavigate,
-  useLocation,
   createSearchParams,
 } from "react-router-dom";
 
-import MaterialSvg from "./svg-icons/Material.module.jsx";
-
 import Header from "./core/Header.jsx";
 import SearchBar from "./widgets/SearchBar.jsx";
-import NavBar from "./core/NavBar.jsx";
+import CartWidget from "./widgets/CartWidget.jsx";
 
-import Cart from "./pages/Cart.jsx";
-import Search from "./pages/Search.jsx";
-import Catalog from "./pages/Catalog.jsx";
-import Product from "./pages/Product.jsx";
-import Landing from "./pages/Landing.jsx";
-
-const NoMatch = () => {
-  let location = useLocation();
-  const navigate = useNavigate();
-
-  useEffect(() => navigate("/"), []);
-
-  return (
-    <div>
-      <h3>
-        No match for <code>{location.pathname}</code>
-      </h3>
-    </div>
-  );
-};
-
-const CustomsView = (props) => {
-  const location = useLocation();
-  useEffect(() => () => props.handleLastPath(location.pathname), []);
-
-  return (
-    <Fragment>
-      <h2>Customs View</h2>
-    </Fragment>
-  );
-};
-
-const CartWidget = ({ currentOrderTotal }) => {
-  const { CartIcon } = MaterialSvg;
-  const navigate = useNavigate();
-
-  return (
-    <div className="cart-widget-cont" onClick={() => navigate("/checkout")}>
-      <p className="cart-widget__counter">{currentOrderTotal}</p>
-      <CartIcon type="sharp" className="cart-widget__icon icon" />
-    </div>
-  );
-};
-
-const paths = ["/", "/shop", "/customs", "/checkout"];
+import CartPage from "./pages/CartPage.jsx";
+import SearchPage from "./pages/SearchPage.jsx";
+import LandingPage from "./pages/LandingPage.jsx";
+import CatalogPage from "./pages/CatalogPage.jsx";
+import ProductPage from "./pages/ProductPage.jsx";
+import NoMatchPage from "./pages/NoMatchPage.jsx";
+import CustomisePage from "./pages/CustomisePage.jsx";
 
 const App = () => {
-  // const [productData, setProductData] = useState([]);
   const [productPagePath, setProductPagePath] = useState("");
   const [productSelection, setProductSelection] = useState();
   const [clickThroughProductType, setClickThroughProductType] = useState();
 
   const navigate = useNavigate();
-  const location = useLocation();
   const [lastPath, setLastPath] = useState();
-  const [lastSearchPath, setLastSearchPath] = useState();
-
   const [searchInput, setSearchInput] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
 
   const [currentOrderTotal, setCurrentOrderTotal] = useState(0);
   const [customerOrder, setCustomerOrder] = useState([]);
@@ -153,7 +107,7 @@ const App = () => {
   };
 
   const handleCartCount = (array) => {
-    let itemsIncart = 0;
+    let itemsInCart = 0;
 
     array.map((item) => (itemsInCart += item.quantity));
     setCurrentOrderTotal(itemsInCart);
@@ -164,17 +118,6 @@ const App = () => {
   };
 
   const handleSearchQuery = (string) => {
-    //   const path =
-    //     string.length < 1
-    //       ? lastPath
-    //       : {
-    //           pathname: "/search",
-    //           search: createSearchParams(string).toString(),
-    //         };
-
-    //   navigate(path);
-    // };
-
     if (string.length < 1) {
       navigate(lastPath);
       return;
@@ -205,14 +148,14 @@ const App = () => {
 
         <Routes>
           <Route
-            path="/shop"
-            element={<Landing handleLastPath={handleLastPath} />}
+            path="/"
+            element={<LandingPage handleLastPath={handleLastPath} />}
           />
 
           <Route
-            path="/"
+            path="/shop"
             element={
-              <Catalog
+              <CatalogPage
                 clickThroughProductType={clickThroughProductType}
                 handleProductSelection={handleProductSelection}
                 handleLastPath={handleLastPath}
@@ -224,24 +167,24 @@ const App = () => {
             <Route
               path={`/shop/${productPagePath}`}
               element={
-                <Product
+                <ProductPage
                   product={productSelection}
                   handleProductToCart={handleProductToCart}
                   handleLastPath={handleLastPath}
-                ></Product>
+                ></ProductPage>
               }
             />
           )}
 
           <Route
             path="/customs"
-            element={<CustomsView handleLastPath={handleLastPath} />}
+            element={<CustomisePage handleLastPath={handleLastPath} />}
           />
 
           <Route
             path={"/search"}
             element={
-              <Search
+              <SearchPage
                 handleSearchInput={handleSearchInput}
                 handleProductSelection={handleProductSelection}
               />
@@ -251,7 +194,7 @@ const App = () => {
           <Route
             path="/checkout"
             element={
-              <Cart
+              <CartPage
                 itemsInCart={customerOrder}
                 handleCartItem={handleCartItem}
                 handleLastPath={handleLastPath}
@@ -259,8 +202,7 @@ const App = () => {
             }
           />
 
-          {/* <Route path="*" element={<NoMatch />} /> */}
-          <Route path="*" element={<NoMatch />} />
+          <Route path="*" element={<NoMatchPage />} />
         </Routes>
 
         <footer></footer>
