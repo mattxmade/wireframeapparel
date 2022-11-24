@@ -4,7 +4,7 @@ const CopyPlugin = require("copy-webpack-plugin");
 const { ESBuildMinifyPlugin } = require("esbuild-loader");
 
 module.exports = {
-  entry: "./src/index.jsx",
+  entry: "./src/index.js",
   plugins: [
     new HtmlWebpackPlugin({
       inject: true,
