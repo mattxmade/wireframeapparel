@@ -1,159 +1,117 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import PropTypes, { array } from "prop-types";
 
-import capitaliseString from "../../utility/capitaliseString";
-import LocalStorage from "../../data/LocalStorage.module";
+import fetchData from "../../data/fetchData";
 import ProductData from "../../data/product.data";
+import LocalStorage from "../../data/LocalStorage.module";
 
-import Aside from "../core/Aside";
-import Promo from "../widgets/Promo";
+import useSort from "../hooks/useSort";
+import useFilter from "../hooks/useFilter";
+
+import Products from "./Products";
 import ItemCard from "../core/ItemCard";
-import Dropdown from "../widgets/Dropdown";
 
 import "../../styles/Catalog.css";
 
-const sortBy = {
-  alphabetical: {
-    aToZ: (array) => {
-      return array.sort((a, z) => {
-        if (a.name < z.name) return -1;
-        if (a.name > z.name) return 1;
+const Catalog = (props) => {
+  const location = useLocation();
 
-        return 0;
-      });
-    },
-  },
+  const [cache, setCache] = useState();
+  const [browseResults, setBrowseResults] = useState();
+  const [productsPerPage, setProductsPerPage] = useState(19);
 
-  price: {
-    lowToHigh: (array) => array.sort((a, z) => z.price - a.price),
-    HighToLow: (array) => array.sort((a, z) => a.price - z.price),
-  },
-};
-
-const fetchDataFromStore = async (productType, setProductData, filter) => {
-  const response = await ProductData.list(19, productType);
-  setProductData(sortBy.alphabetical.aToZ(response));
-};
-
-const Catalog = ({ clickThroughProductType, handleProductSelection }) => {
-  const [sort, setSort] = useState(false);
-  const [filter, setFilter] = useState("All");
-  const [productData, setProductData] = useState([]);
-  const [productType, setProductType] = useState(
-    clickThroughProductType ? clickThroughProductType : "t-shirts"
+  const sort = useSort();
+  const filter = useFilter("browse");
+  const [category, setCategory] = useState(
+    props.clickThroughProductType ??
+      LocalStorage.get("category")?.browse ??
+      "t-shirts"
   );
 
-  useEffect(() => {
-    if (productData) {
-      const userFilter = LocalStorage.get("filter");
-      if (userFilter) setFilter(userFilter);
+  const mapData = (array) => setBrowseResults(array?.map((product) => product));
 
-      const userSort = LocalStorage.get("sort");
-      if (userSort) sortProductsBy(userSort);
-    }
-  }, [productData]);
+  const handleFetchProductData = (category, numOfItems) =>
+    fetchData(ProductData.list, { setCache }, category, numOfItems);
 
-  // Product data
-  useEffect(() => {
-    const requestProductData = fetchDataFromStore(productType, setProductData);
-    requestProductData;
-  }, [productType]);
+  const handleCategory = (productCategory) => {
+    if (productCategory === category) return;
 
-  const updateProductType = (string) => setProductType(string);
+    LocalStorage.set("category", {
+      browse: productCategory,
+      search: category.search,
+    });
+    LocalStorage.set("brand", "All");
 
-  const handleProductFilter = (categoryToFilter, filterBy) => {
-    setFilter(filterBy);
-    LocalStorage.set("filter", filterBy);
+    setCategory(productCategory);
+    handleFetchProductData(productCategory, productsPerPage);
   };
 
-  // Sort products
-  const sortProductsBy = (e) => {
-    const sorting = e.target ? e.target.value : e;
-    LocalStorage.set("sort", sorting);
-
-    switch (sorting) {
-      case "price: high to low":
-        setProductData(sortBy.price.lowToHigh(productData));
-        break;
-
-      case "price: low to high":
-        setProductData(sortBy.price.HighToLow(productData));
-        break;
-
-      default:
-        setProductData((prevProductData) =>
-          sortBy.alphabetical.aToZ(prevProductData)
-        );
-        break;
-    }
+  const handleSortProducts = (sortProductsBy, array = browseResults) => {
+    if (sort.sortBy === sortProductsBy) return;
+    mapData(sort.handleSortBy(sortProductsBy, array));
   };
 
-  // Sort cleanup
+  const handleFilterProducts = (productType, filterProductsBy) => {
+    if (filter.attribute === filterProductsBy) return;
+
+    LocalStorage.set("filter", filterProductsBy);
+    mapData(filter.handle(productType, filterProductsBy, cache));
+  };
+
+  const viewProps = {
+    type: "browse",
+
+    handleCategory,
+    handleSortProducts,
+    handleFilterProducts,
+  };
+
   useEffect(() => {
-    if (sort) setSort(false);
-  }, [sort]);
+    handleFetchProductData(category, productsPerPage);
+    return () => props.handleLastPath(location.pathname);
+  }, []);
+
+  const handleProcessData = () => {
+    const filterProducts = filter.handle(
+      LocalStorage.get("category")?.browse ?? "All",
+      LocalStorage.get("brand") ?? "All",
+      cache
+    );
+
+    mapData(sort.handleSortBy(sort.sortBy, filterProducts));
+  };
+
+  useEffect(() => cache && handleProcessData(), [cache]);
+
+  // items per page
 
   return (
-    <main className="main--catalog">
-      <div className="sidebar">
-        <Aside
-          category={productType}
-          updateProductType={updateProductType}
-          handleProductFilter={handleProductFilter}
-        ></Aside>
-        {/* <Promo /> */}
-      </div>
-
-      <section className="catalog__section">
-        <ul>
-          <li>
-            <h2>// {capitaliseString(productType)}</h2>
-          </li>
-          <li>
-            <Dropdown
-              handleSetSort={setSort}
-              handleSortProductsBy={sortProductsBy}
-            >
-              {"Name: A-Z"}
-              {"Price: Low to High"}
-              {"Price: High to Low"}
-            </Dropdown>
-          </li>
-        </ul>
-
-        {productData && (
+    <Fragment>
+      <Products view={viewProps} productCategory={category}>
+        {browseResults?.length > 0 && (
           <div className="catalog__section--products">
-            {productData.map((item, index) =>
-              filter === "All" ? (
+            {browseResults.map(
+              (item, index) =>
                 item && (
                   <ItemCard
                     item={item}
                     key={index}
-                    type={productType}
-                    handleProductSelection={handleProductSelection}
+                    type={"Search"}
+                    handleProductSelection={props.handleProductSelection}
                   />
                 )
-              ) : item?.brand === filter ? (
-                <ItemCard
-                  item={item}
-                  key={index}
-                  type={productType}
-                  handleProductSelection={handleProductSelection}
-                />
-              ) : (
-                ""
-              )
             )}
           </div>
         )}
-      </section>
-    </main>
+      </Products>
+    </Fragment>
   );
 };
 
 export default Catalog;
 
-Catalog.propTypes = {
-  clickThroughProductType: PropTypes.string,
-  handleProductSelection: PropTypes.func,
-};
+// Catalog.propTypes = {
+//   clickThroughProductType: PropTypes.string,
+//   handleProductSelection: PropTypes.func,
+// };
