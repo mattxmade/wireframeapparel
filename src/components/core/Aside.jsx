@@ -145,6 +145,7 @@ const Aside = ({ view, category, updateProductType, handleProductFilter }) => {
   };
 
   useEffect(() => {
+    handleViewportSize();
     window.addEventListener("resize", handleViewportSize);
 
     return () => {
