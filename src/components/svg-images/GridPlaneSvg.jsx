@@ -1,6 +1,6 @@
 import React from "react";
 
-const Grid = ({ className, width, height, fill }) => (
+const GridPlaneSvg = ({ className, width, height, fill }) => (
   <svg
     fill={fill}
     width={width}
@@ -20,4 +20,4 @@ const Grid = ({ className, width, height, fill }) => (
   </svg>
 );
 
-export default Grid;
+export default GridPlaneSvg;
