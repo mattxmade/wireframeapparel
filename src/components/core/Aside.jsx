@@ -5,7 +5,7 @@ import AwesomeSvg from "../svg-icons/Awesome.module";
 import productCategories from "../../data/product.categories";
 import LocalStorage from "../../data/LocalStorage.module";
 
-import "../../styles/Aside.style.css";
+import "./Aside.style.css";
 
 const ProductFilters = ({
   title,
