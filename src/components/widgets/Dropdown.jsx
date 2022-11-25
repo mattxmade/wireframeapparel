@@ -4,17 +4,13 @@ import React, { useEffect, useState } from "react";
 import AwesomeSvg from "../svg-icons/Awesome.module";
 import LocalStorage from "../../data/LocalStorage.module";
 
-const Dropdown = ({ children, handleSetSort, handleSortProductsBy }) => {
+const Dropdown = ({ children, handleSortProductsBy }) => {
   const restoreSelection = LocalStorage.get("sort");
 
   useEffect(() => {
     if (restoreSelection) {
       setSelection(restoreSelection);
-
-      setTimeout(() => {
-        handleSetSort(true);
-        handleSortProductsBy(restoreSelection);
-      }, 0);
+      setTimeout(() => handleSortProductsBy(restoreSelection), 0);
     }
   }, []);
 
@@ -22,7 +18,7 @@ const Dropdown = ({ children, handleSetSort, handleSortProductsBy }) => {
   const [selection, setSelection] = useState(children[0]);
 
   const sortOptions = children;
-  const CaretDown = AwesomeSvg.CaretDown;
+  const CaretDown = AwesomeSvg.CaretDownIcon;
 
   const dropdownStyle = {
     dropdown: {
@@ -48,7 +44,6 @@ const Dropdown = ({ children, handleSetSort, handleSortProductsBy }) => {
     setSelection(string);
     setToggleDropdown(false);
 
-    handleSetSort(true);
     handleSortProductsBy(string.toLowerCase());
   };
 
