@@ -1,10 +1,12 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
-
-import depluraliseString from "../../utility/depluraliseString.js";
 
 import AwesomeSvg from "../svg-icons/Awesome.module.jsx";
 import PaymentSvg from "../svg-icons/Payment.module.jsx";
+import GridTunnelSvg from "../svg-images/GridTunnelSvg.jsx";
+import depluraliseString from "../../utility/depluraliseString.js";
+
 import "../../styles/Cart.style.css";
 
 function fixPrice(price) {
@@ -16,22 +18,50 @@ function fixPrice(price) {
 }
 
 const CartItem = (props) => {
-  const TrashSvg = AwesomeSvg.Trash;
+  const { AngleUpIcon, AngleDownIcon } = AwesomeSvg;
+  const TrashIcon = AwesomeSvg.TrashIcon;
   const { item, index, handleCartItem } = props;
 
   return (
     <Fragment>
-      {/* <p>Item details: thumbnail, name, price, quantity, total</p> */}
       <ul className="cart-items">
         <li>
           <img src={item.image.src} alt={item.image.alt} />
-          <p>
-            {item.name} {depluraliseString(item.type.kind)}
-          </p>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <p>
+              {item.name} {depluraliseString(item.type)}
+            </p>
+            <p>{item.size}</p>
+            <p>{item.color}</p>
+          </div>
         </li>
-        <li onClick={() => handleCartItem(index, "remove")}>
-          <TrashSvg className="cart-icon" />
-          <p>{item.quantity}</p>
+        <li>
+          <div onClick={() => handleCartItem(index, "remove")}>
+            <TrashIcon className="cart-icon" />
+          </div>
+
+          <div className="cart-item-quantity-container">
+            <i
+              style={{ cursor: "pointer" }}
+              onClick={(e) => {
+                e.preventDefault();
+                handleCartItem(index, "increment");
+              }}
+            >
+              <AngleUpIcon />
+            </i>
+            <p>{item.quantity}</p>
+            <i
+              style={{ cursor: "pointer" }}
+              onClick={(e) => {
+                e.preventDefault();
+                handleCartItem(index, "decrement");
+              }}
+            >
+              <AngleDownIcon />
+            </i>
+          </div>
+
           <p>{"£" + fixPrice(item.price * item.quantity)}</p>
         </li>
       </ul>
@@ -39,7 +69,17 @@ const CartItem = (props) => {
   );
 };
 
-const Cart = ({ itemsInCart, handleCartItem }) => {
+CartItem.propTypes = {
+  itemsInCart: PropTypes.array,
+  handleCartItem: PropTypes.func,
+};
+
+const CartPage = (props) => {
+  const { itemsInCart, handleCartItem } = props;
+
+  const location = useLocation();
+  useEffect(() => () => props.handleLastPath(location.pathname), []);
+
   let priceTotal = 0;
   let totalNumberOfItems = 0;
 
@@ -51,7 +91,6 @@ const Cart = ({ itemsInCart, handleCartItem }) => {
   return (
     <main className="cart">
       <h2 className="cart__heading">
-        {/* Your cart: */}
         <span>
           {totalNumberOfItems} {totalNumberOfItems === 1 ? "item" : "items"} in
           your cart
@@ -62,34 +101,49 @@ const Cart = ({ itemsInCart, handleCartItem }) => {
         <div className="cart__staging--details">
           {/* TODO: render placeholder if no items in cart */}
 
+          {/* {!itemsInCart.length ? (
+            <div
+              style={{
+                width: "100%",
+                height: "-webkit-fill-available",
+                position: "absolute",
+                top: 0,
+                left: 0,
+                overflow: "hidden",
+              }}
+            >
+              <GridTunnelSvg height="100vh" fill={"darkcyan"} />
+            </div>
+          ) : null} */}
+
           {itemsInCart.length
             ? itemsInCart.map((item, index) => {
-                fixPrice((priceTotal += item.price * item.quantity));
+                priceTotal = fixPrice(item.price * item.quantity);
+
                 return (
                   <CartItem
-                    key={item.id}
+                    key={item.id + index}
                     item={item}
                     index={index}
                     handleCartItem={handleCartItem}
                   />
                 );
               })
-            : ""}
+            : null}
 
           {priceTotal ? (
             <ul className="cart-total">
               <li>Total</li>
               <li>{"£" + priceTotal}</li>
             </ul>
-          ) : (
-            ""
-          )}
+          ) : null}
         </div>
 
         <div className="cart__staging--place-order">
           <h3>Guest checkout</h3>
 
           <ul className="payment-list">
+            {/* component */}
             <li>
               <AmazonPayLogo
                 className="pay-logo"
@@ -130,7 +184,7 @@ const Cart = ({ itemsInCart, handleCartItem }) => {
 
           <button
             className="checkout-button action-button"
-            //onClick={() => handleProductOrder(product, quantity)}
+            // TODO onClick={() => handleProductOrder(product, quantity)}
           >
             Checkout
           </button>
@@ -140,9 +194,4 @@ const Cart = ({ itemsInCart, handleCartItem }) => {
   );
 };
 
-export default Cart;
-
-CartItem.propTypes = {
-  itemsInCart: PropTypes.array,
-  handleCartItem: PropTypes.func,
-};
+export default CartPage;
