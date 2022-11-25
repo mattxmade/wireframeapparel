@@ -10,7 +10,7 @@ const useFilter = (viewType) => {
     let ProductFilter;
 
     if (view === "browse") {
-      fallback = "t-shirts";
+      fallback = "All";
 
       ProductFilter = (category, filterBy, arrayToFilter) =>
         arrayToFilter.filter((product) => {
@@ -24,12 +24,13 @@ const useFilter = (viewType) => {
 
       ProductFilter = (category, filterBy, array) => {
         const data = array.filter((product) => {
+          if (category === "All") return product;
           if (product.type.category === category) return product;
         });
 
         return data.filter((product) => {
-          if (filterBy === product.brand) return product;
           if (filterBy == "All") return product;
+          if (filterBy === product.brand) return product;
         });
       };
     }
@@ -39,18 +40,18 @@ const useFilter = (viewType) => {
 
   const { fallback, ProductFilter } = config(view);
 
-  const [filterBy, setFilterBy] = useState(
+  const [attribute, setAttribute] = useState(
     LocalStorage.get("filter") ?? fallback
   );
 
-  const handleFilterBy = (category, method, arrayToFilter) => {
-    setFilterBy(method);
-    LocalStorage.set("filter", method);
+  const handle = (category, filterByAttribute, arrayToFilter) => {
+    setAttribute(filterByAttribute);
+    // LocalStorage.set("filter", filterByAttribute);
 
-    return ProductFilter(category, method, arrayToFilter);
+    return ProductFilter(category, filterByAttribute, arrayToFilter);
   };
 
-  return { filterBy, handleFilterBy };
+  return { attribute, handle };
 };
 
 export default useFilter;
