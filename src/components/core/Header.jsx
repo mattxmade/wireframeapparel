@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 
@@ -6,15 +6,22 @@ import "../../styles/Header.css";
 import logo from "../../assets/brand/wireframe.png";
 import AwesomeSvg from "../svg-icons/Awesome.module";
 
+import NavBar from "./NavBar";
+const paths = ["/", "/shop", "/checkout"];
+
+const handleDesktopHeader = (e) => (window.innerWidth > 1000 ? true : false);
+const handleSmallVPHeader = (e) => (window.innerWidth <= 1000 ? true : false);
+const handleMobileHeader = (e) => (window.innerWidth <= 570 ? true : false);
+
 const Header = (props) => {
   const navigate = useNavigate();
-  const [SearchBar, Nav, BasketWidget] = Array.from(props.children);
   const MenuIcon = AwesomeSvg.BarsIcon;
 
-  const handleDesktopHeader = (e) => (window.innerWidth > 1000 ? true : false);
-  const handleSmallVPHeader = (e) => (window.innerWidth <= 1000 ? true : false);
-  const handleMobileHeader = (e) => (window.innerWidth <= 570 ? true : false);
+  const navBarRef = useRef();
+  const [SearchBar, BasketWidget] = Array.from(props.children);
+  // const [SearchBar, Nav, BasketWidget] = Array.from(props.children);
 
+  const [toggleNavBar, setToggleNavBar] = useState(false);
   const [renderDesktopHeader, setDesktopHeader] = useState(handleDesktopHeader);
   const [renderSmallVPHeader, setSmallVPHeader] = useState(handleSmallVPHeader);
   const [renderMobileHeader, setMobileHeader] = useState(handleMobileHeader);
@@ -25,14 +32,31 @@ const Header = (props) => {
     setMobileHeader(handleMobileHeader());
   };
 
-  // TODO | refactor/recompose aS three elements based on viewport size
+  const handleToggleNavBar = (e) => setToggleNavBar(!toggleNavBar);
+
+  const showNavBar = () => {
+    navBarRef.current.classList.remove("hide-nav");
+    navBarRef.current.classList.add("show-nav");
+  };
+
+  const hideNavBar = () => {
+    navBarRef.current.classList.remove("show-nav");
+    navBarRef.current.classList.add("hide-nav");
+  };
+
+  useEffect(() => {
+    if (!renderDesktopHeader) return toggleNavBar ? showNavBar() : hideNavBar();
+
+    navBarRef.current.classList.remove("show-nav");
+    navBarRef.current.classList.remove("hide-nav");
+  }, [renderDesktopHeader, toggleNavBar]);
+
+  // TODO | refactor
 
   useEffect(() => {
     window.addEventListener("resize", handleViewportSize);
     return () => window.removeEventListener("resize", handleViewportSize);
   }, []);
-
-  useEffect(() => {}, [renderDesktopHeader, renderSmallVPHeader]);
 
   return (
     <header>
@@ -41,8 +65,11 @@ const Header = (props) => {
           <li
             className="header__item header__item--cart"
             style={{
+              zIndex: 11,
               cursor: "pointer",
+              position: "relative",
             }}
+            onClick={handleToggleNavBar}
           >
             {
               <i
@@ -75,9 +102,9 @@ const Header = (props) => {
           <li className="header__item header__item--search">{SearchBar}</li>
         )}
 
-        {renderDesktopHeader && (
-          <li className="header__item--nav outline">{Nav}</li>
-        )}
+        <li ref={navBarRef} className="header__item--nav outline">
+          <NavBar paths={paths} openNavBar={setToggleNavBar} />
+        </li>
 
         <li className="header__item header__item--cart">{BasketWidget}</li>
 
