@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 
-import "../../styles/Header.css";
-import logo from "../../assets/brand/wireframe.png";
+import "./Header.style.css";
+import logo from "../../assets/brand/wireframe.webp";
 import AwesomeSvg from "../svg-icons/Awesome.module";
 
 import NavBar from "./NavBar";
