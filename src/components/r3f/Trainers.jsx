@@ -3,7 +3,7 @@ import React, { useRef } from "react";
 import { FrontSide, LinearEncoding } from "three";
 import { Decal, useGLTF, useTexture } from "@react-three/drei";
 
-import tag from "../../assets/designs/globe_wf.png";
+import tag from "../../assets/designs/globe_wf.webp";
 import trainers from "../../assets/models/trainers.glb";
 import degreesToRadian from "./r3f-helpers/degreesToRadian";
 
