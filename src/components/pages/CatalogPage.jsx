@@ -12,7 +12,7 @@ import useFilter from "../hooks/useFilter";
 import Products from "./Products";
 import ItemCard from "../core/ItemCard";
 
-import "../../styles/Catalog.css";
+import "../../styles/Catalog.style.css";
 
 const Catalog = (props) => {
   const location = useLocation();
