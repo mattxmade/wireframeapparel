@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
 
@@ -9,12 +9,13 @@ import depluraliseString from "../../utility/depluraliseString.js";
 
 import "../../styles/Cart.style.css";
 
-const fixPrice = (price) => Math.ceil(price * 100) / 100;
+const fixPrice = (price) => Number.parseFloat(price).toFixed(2);
 
 const CartItem = (props) => {
-  const { AngleUpIcon, AngleDownIcon } = AwesomeSvg;
+  const { item, variantID, handleCartItem } = props;
+
   const TrashIcon = AwesomeSvg.TrashIcon;
-  const { item, index, handleCartItem } = props;
+  const { AngleUpIcon, AngleDownIcon } = AwesomeSvg;
 
   return (
     <Fragment>
@@ -30,7 +31,7 @@ const CartItem = (props) => {
           </div>
         </li>
         <li>
-          <div onClick={() => handleCartItem(index, "remove")}>
+          <div onClick={() => handleCartItem(variantID, "remove")}>
             <TrashIcon className="cart-icon" />
           </div>
 
@@ -39,7 +40,7 @@ const CartItem = (props) => {
               style={{ cursor: "pointer" }}
               onClick={(e) => {
                 e.preventDefault();
-                handleCartItem(index, "increment");
+                handleCartItem(variantID, "increment");
               }}
             >
               <AngleUpIcon />
@@ -49,7 +50,7 @@ const CartItem = (props) => {
               style={{ cursor: "pointer" }}
               onClick={(e) => {
                 e.preventDefault();
-                handleCartItem(index, "decrement");
+                handleCartItem(variantID, "decrement");
               }}
             >
               <AngleDownIcon />
@@ -69,15 +70,17 @@ CartItem.propTypes = {
 };
 
 const CartPage = (props) => {
-  const { itemsInCart, handleCartItem } = props;
+  const [customerCart, setCustomerCart] = useState([...props.itemsInCart]);
+
+  const [cartOrderTotal, setCartOrderTotal] = useState(0);
+  const [numberOfItemsInCart, setNumberOfItemsInCart] = useState(0);
 
   const location = useLocation();
   useEffect(() => () => props.handleLastPath(location.pathname), []);
 
-  let priceTotal = 0;
+  let cartTotal = 0;
+  let prevTotal = 0;
   let totalNumberOfItems = 0;
-
-  itemsInCart.map((item) => (totalNumberOfItems += item.quantity));
 
   const { AmazonPayLogo, ApplePayLogo, DigitalPayLogos } = PaymentSvg;
   const { GooglePayLogo, PayPalLogo, VisaLogo } = PaymentSvg;
@@ -91,12 +94,68 @@ const CartPage = (props) => {
     };
   }, []);
 
+  const updateItemQuantity = (itemIndexToUpdate, action) => {
+    let updateCart = customerCart.map((item) => item);
+    const itemToUpdate = updateCart[itemIndexToUpdate];
+
+    action === "increment"
+      ? (itemToUpdate.quantity += 1)
+      : (itemToUpdate.quantity -= 1);
+
+    if (itemToUpdate.quantity !== 0) return setCustomerCart(updateCart);
+
+    updateCart.splice(itemIndexToUpdate, 1);
+    if (updateCart.length === 0) updateCart = [];
+
+    setCustomerCart(updateCart);
+  };
+
+  const removeItemFromCart = (itemByVariantID) => {
+    if (customerCart.length === 1) return setCustomerCart([]);
+
+    setCustomerCart((prevCart) =>
+      prevCart.map((item) => item.variant !== itemByVariantID && item)
+    );
+  };
+
+  const handleCartItem = (item, action) => {
+    switch (action) {
+      case "increment":
+        return updateItemQuantity(item, action);
+      case "decrement":
+        return updateItemQuantity(item, action);
+      case "remove":
+        return removeItemFromCart(item);
+    }
+  };
+
+  useEffect(() => {
+    const updatedOrder = [];
+    customerCart.forEach((item) => (item ? updatedOrder.push(item) : null));
+
+    updatedOrder.map((item) => {
+      totalNumberOfItems += item.quantity;
+
+      cartTotal = prevTotal + item.price * item.quantity;
+      prevTotal = cartTotal;
+    });
+
+    cartTotal = fixPrice(cartTotal);
+
+    setCartOrderTotal(cartTotal);
+    setNumberOfItemsInCart(totalNumberOfItems);
+
+    props.handleCartCount(updatedOrder);
+
+    return () => props.updateCustomerOrder(updatedOrder);
+  }, [customerCart]);
+
   return (
     <main className="cart">
       <h2 className="cart__heading">
         <span>
-          {totalNumberOfItems} {totalNumberOfItems === 1 ? "item" : "items"} in
-          your cart
+          {numberOfItemsInCart} {numberOfItemsInCart === 1 ? "item" : "items"}{" "}
+          in your cart
         </span>
       </h2>
 
@@ -119,25 +178,23 @@ const CartPage = (props) => {
             </div>
           ) : null} */}
 
-          {itemsInCart.length
-            ? itemsInCart.map((item, index) => {
-                priceTotal += fixPrice(item.price * item.quantity);
-
-                return (
+          {customerCart.length
+            ? customerCart.map((item, index) => {
+                return item ? (
                   <CartItem
                     key={item.id + index}
                     item={item}
-                    index={index}
+                    variantID={item.variant}
                     handleCartItem={handleCartItem}
                   />
-                );
+                ) : null;
               })
             : null}
 
-          {priceTotal ? (
+          {numberOfItemsInCart ? (
             <ul className="cart-total">
               <li>Total</li>
-              <li>{"£" + priceTotal}</li>
+              <li>{"£" + cartOrderTotal}</li>
             </ul>
           ) : null}
         </div>
