@@ -9,13 +9,7 @@ import depluraliseString from "../../utility/depluraliseString.js";
 
 import "../../styles/Cart.style.css";
 
-function fixPrice(price) {
-  const fixedToOne = Number.parseFloat(price).toFixed(1);
-  const fixedToTwo = Number.parseFloat(price).toFixed(2);
-
-  const isLastDigit = fixedToTwo.toString().slice(fixedToTwo.length - 1);
-  return isLastDigit === "0" ? fixedToOne : fixedToTwo;
-}
+const fixPrice = (price) => Math.ceil(price * 100) / 100;
 
 const CartItem = (props) => {
   const { AngleUpIcon, AngleDownIcon } = AwesomeSvg;
@@ -88,6 +82,15 @@ const CartPage = (props) => {
   const { AmazonPayLogo, ApplePayLogo, DigitalPayLogos } = PaymentSvg;
   const { GooglePayLogo, PayPalLogo, VisaLogo } = PaymentSvg;
 
+  useEffect(() => {
+    const body = document.querySelector("body");
+    body.style.overflowY = "scroll";
+
+    return () => {
+      body.style.overflowY = "hidden";
+    };
+  }, []);
+
   return (
     <main className="cart">
       <h2 className="cart__heading">
@@ -118,7 +121,7 @@ const CartPage = (props) => {
 
           {itemsInCart.length
             ? itemsInCart.map((item, index) => {
-                priceTotal = fixPrice(item.price * item.quantity);
+                priceTotal += fixPrice(item.price * item.quantity);
 
                 return (
                   <CartItem
