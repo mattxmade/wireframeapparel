@@ -29,6 +29,7 @@ const App = () => {
 
   const [currentOrderTotal, setCurrentOrderTotal] = useState(0);
   const [customerOrder, setCustomerOrder] = useState([]);
+  // const refCustomerOrder = useRef(customerOrder);
 
   const handleProductSelection = (product) => {
     setProductSelection(product);
@@ -70,40 +71,10 @@ const App = () => {
     setCustomerOrder(currentOrder);
   };
 
-  const updateItemQuantity = (itemIndexToUpdate, action) => {
-    let updatedOrder = customerOrder.map((item) => item);
-    const itemToUpdate = updatedOrder[itemIndexToUpdate];
+  const updateCustomerOrder = (array) => {
+    console.log("App: order update function called; CartPage unmounted");
 
-    action === "increment"
-      ? (itemToUpdate.quantity += 1)
-      : (itemToUpdate.quantity -= 1);
-
-    if (itemToUpdate.quantity !== 0) return setCustomerOrder(updatedOrder);
-
-    updatedOrder.splice(itemIndexToUpdate, 1);
-    if (updatedOrder.length === 0) updatedOrder = [];
-
-    setCustomerOrder(updatedOrder);
-  };
-
-  const removeItemFromCart = (itemIndexToRemove) => {
-    if (customerOrder.length === 1) return setCustomerOrder([]);
-
-    return setCustomerOrder((prevCustomerOrder) =>
-      prevCustomerOrder.splice(itemIndexToRemove, 1)
-    );
-  };
-
-  const handleCartItem = (item, action) => {
-    console.log("update order");
-    switch (action) {
-      case "increment":
-        return updateItemQuantity(item, action);
-      case "decrement":
-        return updateItemQuantity(item, action);
-      case "remove":
-        return removeItemFromCart(item);
-    }
+    setCustomerOrder(array);
   };
 
   const handleCartCount = (array) => {
@@ -196,7 +167,8 @@ const App = () => {
             element={
               <CartPage
                 itemsInCart={customerOrder}
-                handleCartItem={handleCartItem}
+                handleCartCount={handleCartCount}
+                updateCustomerOrder={updateCustomerOrder}
                 handleLastPath={handleLastPath}
               />
             }
