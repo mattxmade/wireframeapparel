@@ -48,6 +48,7 @@ const colorSelector = {
     multi: colorSwap(0, 1, [...colorChart]),
   },
   offBlk: colorSwap(0, 2, [...colorChart]),
+  none: ["Transparent"],
 };
 
 export default colorSelector;
