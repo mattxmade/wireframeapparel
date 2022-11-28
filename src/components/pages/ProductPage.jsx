@@ -47,7 +47,7 @@ const ProductPage = (props) => {
 
   useEffect(() => {
     return () => {
-      console.log("unmounted product page");
+      // console.log("unmounted product page");
       props.handleLastPath(location.pathname);
     };
   }, []);
