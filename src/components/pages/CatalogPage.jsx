@@ -12,7 +12,7 @@ import useFilter from "../hooks/useFilter";
 import Products from "./Products";
 import ItemCard from "../core/ItemCard";
 
-import "../../styles/Catalog.style.css";
+import "./CatalogPage.style.scss";
 
 const Catalog = (props) => {
   const location = useLocation();
@@ -90,7 +90,7 @@ const Catalog = (props) => {
     <Fragment>
       <Products view={viewProps} productCategory={category}>
         {browseResults?.length > 0 && (
-          <div className="catalog__section--products">
+          <div className="product-results">
             {browseResults.map(
               (item, index) =>
                 item && (
