@@ -6,14 +6,10 @@ import shop from "../../assets/carousel/wf_shop.webp";
 import shoe from "../../assets/carousel/wf_shoe.webp";
 import tees from "../../assets/carousel/wf_tees.webp";
 
-import "../../styles/Carousel.style.css";
+import "./Carousel.style.scss";
+// import(/* webpackChunkName: "Carousel.style" */ "./Carousel.style.scss");
 
 const images = [sign, shop, bag, shoe, tees];
-// x1 === 0
-// x2 === 0.5
-// x3 === 1
-// x4 === 1.5
-// x5 === 2 and so on
 
 const Chevron = (() => {
   const left = ({ className }) => (
@@ -47,51 +43,63 @@ const Tab = (props) => {
   );
 };
 
-const Carousel = (props) => {
-  const [tabs, setTabs] = useState();
-  const [carousel, setCarousel] = useState();
-
+const getComputedWidth = (cssVariableName) => {
   const root = document.querySelector(":root");
-  const width = Number(
-    getComputedStyle(root).getPropertyValue("--carousel-width").slice(0, -2) // -3 rem -2 px vw vh
-  );
+  return Number(
+    getComputedStyle(root).getPropertyValue(cssVariableName).slice(0, -2)
+  ); // slice -3 rem -2 px vw vh
+};
+
+const Carousel = (props) => {
+  const tabsRef = useRef();
+  const carouselRef = useRef();
+
+  const [width, setWidth] = useState(getComputedWidth("--carousel-width"));
 
   let currentImage = 0;
   let imageCount = images.length - 1;
 
   let currentPosition = 0;
-  const startPosition = imageCount * 0.5;
 
   const ChevronLeft = Chevron.left;
   const ChevronRight = Chevron.right;
 
+  const handleViewportChange = (e) =>
+    setWidth(getComputedWidth("--carousel-width"));
+
   useEffect(() => {
-    setTabs(Array.from(document.querySelectorAll(".image-tab")));
-    setCarousel(document.querySelector(".carousel"));
+    carouselRef.current.style.transform = "translate(0,0)";
+
+    tabsRef.current.childNodes.forEach((tab) =>
+      tab.classList.remove("illuminate-tab")
+    );
+
+    tabsRef.current.childNodes[0].classList.add("illuminate-tab");
+
+    currentImage = 0;
+    currentPosition = 0;
+  }, [width]);
+
+  useEffect(() => {
+    window.addEventListener("resize", handleViewportChange);
+    tabsRef.current.childNodes[0].classList.add("illuminate-tab");
+
+    return () => {
+      window.removeEventListener("resize", handleViewportChange);
+    };
   }, []);
-
-  useEffect(() => {
-    if (!carousel) return;
-
-    setTimeout(() => {
-      return carousel.parentNode.classList.add("animate--carousel__path");
-    }, 1200);
-  }, [carousel]);
-
-  useEffect(() => {
-    tabs && tabs[0].classList.add("illuminate-tab");
-  }, [tabs]);
 
   const handleLeft = (e) => {
     if (currentImage >= 1) {
-      console.log(currentImage);
-
-      carousel.style.transform = `translate(${(currentPosition +=
+      carouselRef.current.style.transform = `translate(${(currentPosition +=
         width)}vw, 0)`;
 
-      tabs[currentImage].classList.remove("illuminate-tab");
+      tabsRef.current.childNodes.forEach((tab) =>
+        tab.classList.remove("illuminate-tab")
+      );
+
       currentImage--;
-      tabs[currentImage].classList.add("illuminate-tab");
+      tabsRef.current.childNodes[currentImage].classList.add("illuminate-tab");
     }
   };
 
@@ -103,13 +111,15 @@ const Carousel = (props) => {
 
   const handleRight = (e) => {
     if (currentImage < imageCount) {
-      carousel.style.transform = `translate(${(currentPosition -=
+      carouselRef.current.style.transform = `translate(${(currentPosition -=
         width)}vw, 0)`;
 
-      tabs[currentImage].classList.remove("illuminate-tab");
-      currentImage++;
+      tabsRef.current.childNodes.forEach((tab) =>
+        tab.classList.remove("illuminate-tab")
+      );
 
-      tabs[currentImage].classList.add("illuminate-tab");
+      currentImage++;
+      tabsRef.current.childNodes[currentImage].classList.add("illuminate-tab");
     }
   };
 
@@ -134,10 +144,7 @@ const Carousel = (props) => {
             </i>
           </div>
 
-          <ul
-            className="carousel"
-            style={{ left: `${width * startPosition}vw` }}
-          >
+          <ul ref={carouselRef} className="carousel">
             {images.map((image, index) => {
               return (
                 <li key={index} className="carousel__img">
@@ -148,7 +155,7 @@ const Carousel = (props) => {
           </ul>
         </div>
 
-        <ul className="carousel__bar header__item--widgets">
+        <ul ref={tabsRef} className="carousel__bar header__item--widgets">
           {[...new Array(images.length)].map((val, index) => (
             <li
               key={index}
