@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import ProductSort from "../../data/product.sort";
+import ProductSort from "../../data/product.sorting";
 import LocalStorage from "../../data/LocalStorage.module";
 
 const useSort = () => {
