@@ -4,13 +4,14 @@ import PropTypes, { array } from "prop-types";
 
 import fetchData from "../../data/fetchData";
 import ProductData from "../../data/product.data";
+import LocalStorage from "../../data/LocalStorage.module";
 
 import useSort from "../hooks/useSort";
 import useFilter from "../hooks/useFilter";
 
-import Products from "./Products";
+import ProductResults from "./ProductResults";
 import ItemCard from "../core/ItemCard";
-import LocalStorage from "../../data/LocalStorage.module";
+import "./CatalogPage.style.scss";
 
 const SearchPage = (props) => {
   const navigate = useNavigate();
@@ -85,9 +86,9 @@ const SearchPage = (props) => {
     <Fragment>
       {console.count("Search render")}
 
-      <Products view={viewProps} productCategory={category}>
+      <ProductResults view={viewProps} productCategory={category}>
         {searchResults?.length > 0 && (
-          <div className="catalog__section--products">
+          <div className="product-results">
             {searchResults.map(
               (item, index) =>
                 item && (
@@ -101,7 +102,7 @@ const SearchPage = (props) => {
             )}
           </div>
         )}
-      </Products>
+      </ProductResults>
     </Fragment>
   );
 };
