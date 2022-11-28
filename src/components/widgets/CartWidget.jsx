@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 import MaterialSvg from "../svg-icons/Material.module";
+import "./CartWidget.style.scss";
 
 const CartWidget = ({ currentOrderTotal }) => {
   const { CartIcon } = MaterialSvg;
