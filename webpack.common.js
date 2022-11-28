@@ -25,7 +25,7 @@ module.exports = {
         .split("/")
         .slice(1)
         .join("/");
-      return `${filepath}/[name][ext]`;
+      return `${filepath}/[name][ext]`; // [1]
     },
     clean: true,
   },
@@ -47,10 +47,6 @@ module.exports = {
           loader: "jsx",
           target: "es2015",
         },
-      },
-      {
-        test: /\.css$/i,
-        use: ["style-loader", "css-loader"],
       },
       {
         test: /\.(png|svg|jpg|jpeg|gif|webp|ico|gltf|glb|txt)$/i,
