@@ -1,0 +1,167 @@
+:root {
+  --carousel-width: 75vw;
+  --carousel-left: 150vw;
+}
+@media (max-width: 1000px) {
+  :root {
+    --carousel-width: 100vw;
+    --carousel-left: 200vw;
+  }
+}
+@media (max-width: 608px) {
+  :root {
+    --carousel-width: 150vw;
+    --carousel-left: 300vw;
+  }
+}
+
+.carousel-viewer {
+  z-index: 50;
+  display: flex;
+  overflow: hidden;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  height: -webkit-max-content;
+  height: -moz-max-content;
+  height: max-content;
+  border: 0.1rem double white;
+  border-left: none;
+  filter: drop-shadow(0 0.5rem 0.5rem darkslategrey);
+  -webkit-clip-path: polygon(0 50%, 100% 50%, 100% 50%, 0 50%);
+          clip-path: polygon(0 50%, 100% 50%, 100% 50%, 0 50%);
+}
+@media (max-width: 1000px) {
+  .carousel-viewer {
+    margin-right: 0;
+    border-left: 0.1rem double white;
+  }
+}
+
+.animate--carousel__clip-path {
+  transition: 3s;
+  -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+          clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+}
+
+/*=====================
+  Carousel left/right
+=======================*/
+.carousel__navigators {
+  z-index: 51;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  fill: lightgrey;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+@media (max-width: 1000px) {
+  .carousel__navigators {
+    justify-content: space-around;
+  }
+}
+
+.carousel__navigators i {
+  padding: 0 2vw;
+  cursor: pointer;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  transition: 0.8s;
+  width: 8vw;
+}
+
+.navigators i:hover {
+  fill: rgb(0, 191, 255);
+}
+
+.navigators i:active {
+  fill: rgb(255, 255, 255);
+}
+
+/*=============
+  Carousel Ul
+===============*/
+.carousel {
+  left: var(--carousel-left);
+  width: var(--carousel-width);
+  height: calc(var(--carousel-width) / 2);
+  display: flex;
+  position: relative;
+  transition: 0.8s;
+  transform: translate(0, 0);
+  justify-content: center;
+  align-items: center;
+}
+
+/*=============
+  Carousel Li
+===============*/
+.carousel .carousel__img {
+  width: inherit;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/*=================
+  Carousel Images
+===================*/
+.carousel__img img {
+  width: inherit;
+  height: auto;
+  box-shadow: 0 0 0.05rem 0.05rem rgb(34, 58, 85);
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+/*===================
+  Carousel Position
+=====================*/
+.carousel__bar {
+  gap: 2rem;
+  z-index: 10;
+  width: 50%;
+  height: 0.5rem;
+  position: absolute;
+  bottom: -3rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.carousel__bar ul {
+  width: 100%;
+  list-style: none;
+  color: white;
+  font-size: 8vw;
+  gap: 1rem;
+  display: flex;
+  align-items: flex-end;
+}
+
+.image-tab {
+  margin: 0 0.25rem;
+  padding: 0.2rem;
+  position: relative;
+  border-radius: 1rem;
+  background-color: rgba(211, 211, 211, 0.7);
+  background-color: rgb(120, 134, 131);
+  box-shadow: 0 0 1.5rem 0.05rem transparent;
+  transition: 0.8s;
+}
+
+.illuminate-tab {
+  background-color: rgb(205, 255, 236);
+  box-shadow: 0 0 1.5rem 0.1rem rgb(62, 152, 255);
+}/*# sourceMappingURL=Carousel.style.css.map */
+
+/*# sourceMappingURL=Carousel.style.css.map*/
