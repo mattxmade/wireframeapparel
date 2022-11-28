@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import React, { Fragment, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 import Carousel from "../widgets/Carousel";
@@ -6,7 +6,7 @@ import GridPlaneSvg from "../svg-images/GridPlaneSvg";
 import LocalStorage from "../../data/LocalStorage.module";
 import AssetsFromDirectory from "../../assets/AssetsFromDirectory";
 
-import "../../styles/Landing.style.css";
+import "./LandingPage.style.scss";
 
 const LandingPage = (props) => {
   const location = useLocation();
@@ -18,25 +18,30 @@ const LandingPage = (props) => {
   const imageTree = [];
   const resources = [tshirts, skateboards];
   resources.map((resource) =>
-    resource.map((item) => {
+    resource.map((item, index) => {
       if (item.name === "wireframe_wf_ts_bwc_fmbn_y.png") return;
-      imageTree.push(item);
+
+      if (index >= 13 && index <= 19) imageTree.push(item);
     })
   );
 
   useEffect(() => {
     const header = document.querySelector("header");
 
+    const pageMask = document.querySelector("#mask");
+    const gridCont = document.querySelector(".grid-container__grid");
+
+    const grid = document.querySelector("#svg-line-grid");
+    const gridSky = document.querySelector("#svg-rect-sky");
+    const gridPln = document.querySelector("#svg-grid-plane");
+    const carousel = document.querySelector(".carousel");
+
     if (!visited) {
-      const pageMask = document.querySelector("#mask");
-      const gridCont = document.querySelector(".grid-container__grid");
-
-      const grid = document.querySelector("#svg-line-grid");
-      const gridSky = document.querySelector("#svg-rect-sky");
-      const gridPln = document.querySelector("#svg-grid-plane");
-
-      // const content = document.querySelector(".reveal");
-      // timer(content.style.zIndex = 3, 300)
+      setTimeout(() => {
+        return carousel.parentNode.classList.add(
+          "animate--carousel__clip-path"
+        );
+      }, 1200);
 
       let offset = 200;
 
@@ -58,7 +63,13 @@ const LandingPage = (props) => {
         gridSky.classList.add("animate--grid-sky__fill");
       }, 2000 + offset);
 
-      LocalStorage.set("visited", false);
+      LocalStorage.set("visited", true);
+    } else {
+      pageMask.style.zIndex = -100;
+      grid.style.fill = "aliceblue";
+
+      carousel.parentNode.style.clipPath =
+        "polygon(0 0, 100% 0, 100% 100%, 0% 100%)";
     }
 
     return () => {
@@ -72,6 +83,12 @@ const LandingPage = (props) => {
       <div id="mask" />
 
       <main className="main--landing">
+        <ul className="landing__brand-content">
+          <li className="brand-content__item">1</li>
+          <li className="brand-content__item">2</li>
+          <li className="brand-content__item">3</li>
+        </ul>
+
         <Carousel />
 
         <div className="grid-container">
@@ -110,7 +127,7 @@ const LandingPage = (props) => {
               >
                 <img
                   style={{
-                    width: `calc(100vw/${imageTree.length} * 5)`,
+                    width: `calc(100vw/${imageTree.length})`,
                   }}
                   src={image.uri}
                   alt={image.name}
@@ -120,7 +137,7 @@ const LandingPage = (props) => {
                   className="image-shadow"
                   style={{
                     borderRadius: "100%",
-                    width: `calc(100vw/${imageTree.length} * 5 / 2)`,
+                    width: `calc(100vw/${imageTree.length} / 2)`,
                     height: "1rem",
                     opacity: 0.6,
                     background: "darkslategrey",
