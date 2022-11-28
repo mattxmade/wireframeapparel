@@ -8,6 +8,14 @@ module.exports = merge(common, {
     static: "./dist",
     historyApiFallback: true,
   },
+  module: {
+    rules: [
+      {
+        test: /\.(css|scss)$/,
+        use: ["style-loader", "css-loader", "sass-loader"],
+      },
+    ],
+  },
 });
 
 /**
