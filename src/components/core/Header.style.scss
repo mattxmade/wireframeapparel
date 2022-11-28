@@ -1,0 +1,128 @@
+@use "../../sass/variables.scss" as *;
+@use "../../sass/mixins/media-query.scss" as *;
+
+/*========
+  Header
+==========*/
+header {
+  width: 100%;
+  display: flex;
+  padding: 0 0 1rem;
+  background-color: #c7c7c7;
+
+  ul {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    position: relative;
+
+    @include mq(mobile) {
+      flex-wrap: wrap;
+    }
+  }
+}
+
+/*==================
+  Header: ListItem
+====================*/
+.header__item {
+  gap: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  padding: 0.5rem;
+  height: fit-content;
+  margin: 0.7rem 1rem 1rem;
+
+  background-color: rgb(187, 187, 187);
+  box-shadow: 0 0 0.2rem 0.1rem rgb(158, 158, 158),
+    inset 0 0 1rem 0.1rem rgb(206, 206, 206);
+}
+
+/*==========================
+  ListItem: Logo + Heading
+============================*/
+.header__item--branding {
+  cursor: pointer;
+  width: min-content;
+  flex-direction: row-reverse;
+  clip-path: polygon(10% 0, 100% 0%, 100% 90%, 90% 100%, 0% 100%, 0 80%, 0 10%);
+
+  h1 {
+    font-size: 2.5rem;
+    color: aliceblue;
+    width: 11rem;
+    text-shadow: 0.1rem 0.1em 3px rgb(122, 122, 122);
+  }
+
+  img {
+    width: 7.5rem;
+    height: auto;
+  }
+
+  @include mq(medium) {
+    h1 {
+      width: 10rem;
+      font-size: 2rem;
+    }
+
+    img {
+      width: 6.5rem;
+    }
+  }
+}
+
+/*=====================
+  ListItem: SearchBar
+=======================*/
+.header__item--search {
+  width: 35rem;
+  min-width: 20rem;
+
+  @include mq(mobile) {
+    flex: auto;
+    width: auto;
+    min-width: auto;
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+}
+
+/*================
+  ListItem: Cart
+==================*/
+.header__item--cart {
+  justify-content: flex-end;
+}
+
+/*==================
+  ListItem: NavBar
+====================*/
+.header__item--nav {
+  position: relative;
+  justify-self: flex-end;
+  transform: translate(0, 0);
+
+  @include mq(tablet) {
+    width: 90%;
+    height: 100%;
+    margin-left: 10%;
+
+    display: flex;
+    justify-content: space-between;
+
+    right: 0;
+    z-index: 10;
+    position: absolute;
+    background-color: #c7c7c7;
+    transform: translate(100%, 0);
+  }
+
+  @media (max-width: 500px) {
+    width: 100%;
+    align-items: flex-end;
+  }
+}
