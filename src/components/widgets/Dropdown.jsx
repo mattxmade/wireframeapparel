@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 
+import "./Dropdown.style.scss";
 import AwesomeSvg from "../svg-icons/Awesome.module";
 import LocalStorage from "../../data/LocalStorage.module";
 
