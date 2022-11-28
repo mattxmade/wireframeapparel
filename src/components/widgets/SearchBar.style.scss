@@ -1,0 +1,44 @@
+/*=================
+  SearchBar Input
+==================*/
+label {
+  width: 100%;
+  flex: auto;
+  position: relative;
+  align-self: center;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  input {
+    flex: auto;
+    min-width: 10rem;
+    max-width: 100%;
+    padding: 1rem 1rem 1rem 2.5rem;
+    height: 2.5rem;
+    border: 0.2rem solid lightgrey;
+    clip-path: polygon(
+      0% 0,
+      100% 0%,
+      100% 60%,
+      95% 100%,
+      10% 100%,
+      0 100%,
+      0 0%
+    );
+  }
+
+  input:focus-visible {
+    outline: none;
+  }
+
+  svg {
+    width: 1.5rem;
+    height: auto;
+    top: 25%;
+    left: 0.5rem;
+    position: absolute;
+    fill: rgb(150, 150, 150);
+  }
+}
