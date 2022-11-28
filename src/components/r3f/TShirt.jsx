@@ -1,9 +1,9 @@
 import React, { useRef } from "react";
 import { Decal, useGLTF, useTexture } from "@react-three/drei";
 
+import tshirt from "../../assets/three/models/tshirt.glb";
+import tag from "../../assets/three/decals/wireframe_tag.webp";
 import degreesToRadian from "./r3f-helpers/degreesToRadian";
-import tag from "../../assets/decals/wireframe_tag.webp";
-import tshirt from "../../assets/models/tshirt.glb";
 
 const TShirt = (() => {
   const create = (props) => {

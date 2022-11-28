@@ -3,7 +3,7 @@ import { FlakesTexture } from "./r3f-helpers/FlakesTexture";
 import { Decal, useGLTF, useTexture } from "@react-three/drei";
 import { CanvasTexture, RepeatWrapping, Vector2 } from "three";
 
-import deck from "../../assets/models/deck.glb";
+import deck from "../../assets/three/models/deck.glb";
 import degreesToRadian from "./r3f-helpers/degreesToRadian";
 
 const Skateboard = (() => {
