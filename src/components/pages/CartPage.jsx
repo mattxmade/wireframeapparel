@@ -7,7 +7,7 @@ import PaymentSvg from "../svg-icons/Payment.module.jsx";
 import GridTunnelSvg from "../svg-images/GridTunnelSvg.jsx";
 import depluraliseString from "../../utility/depluraliseString.js";
 
-import "../../styles/Cart.style.css";
+import "./CartPage.style.scss";
 
 const fixPrice = (price) => Number.parseFloat(price).toFixed(2);
 
