@@ -1,9 +1,9 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 
-import colorDisplayName from "../../utility/colorDisplayName";
+import hexToColorName from "../../utility/hexToColorName";
 import ProductViewer from "../r3f/ProductViewer";
-import "../../styles/Product.css";
+import "./ProductPage.style.scss";
 
 const ProductPage = (props) => {
   const location = useLocation();
@@ -88,7 +88,8 @@ const ProductPage = (props) => {
 
           <div className="product-color">
             <h3 style={{ marginBottom: "0.5rem" }}>
-              // color: {colorDisplayName(itemColor)}
+              // color:{" "}
+              {itemColor === "Transparent" ? "N/A" : hexToColorName(itemColor)}
             </h3>
             <ul
               style={{
