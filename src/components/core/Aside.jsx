@@ -5,7 +5,7 @@ import AwesomeSvg from "../svg-icons/Awesome.module";
 import productCategories from "../../data/product.categories";
 import LocalStorage from "../../data/LocalStorage.module";
 
-import "./Aside.style.css";
+import "./Aside.style.scss";
 
 const ProductFilters = ({
   title,
@@ -160,7 +160,6 @@ const Aside = ({ view, category, updateProductType, handleProductFilter }) => {
 
   return (
     <aside className="aside-close" ref={asideRef}>
-      {console.count("Aside render")}
       <div className="aside--content">
         <h2>// Filters</h2>
 

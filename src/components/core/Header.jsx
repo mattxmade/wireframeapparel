@@ -2,11 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 
-import "./Header.style.css";
+import "./Header.style.scss";
+import NavBar from "./NavBar";
 import logo from "../../assets/brand/wireframe.webp";
 import AwesomeSvg from "../svg-icons/Awesome.module";
 
-import NavBar from "./NavBar";
 const paths = ["/", "/shop", "/checkout"];
 
 const handleDesktopHeader = (e) => (window.innerWidth > 1000 ? true : false);
