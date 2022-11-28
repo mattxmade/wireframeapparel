@@ -1,0 +1,38 @@
+/*===============
+  Dropdown Menu
+================*/
+.dropdown {
+  user-select: none;
+  outline: 0.2rem solid var(--col-brand-main);
+  p {
+    font-size: 1.6rem;
+    font-family: "Bebas Neue", cursive;
+  }
+
+  li {
+    padding-left: 1rem;
+  }
+}
+
+.dropdown__icon-continer {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  clip-path: var(--clip-path);
+  background: var(--brand-base-color);
+
+  svg {
+    fill: white;
+  }
+}
+
+.dropdown-selected {
+  display: flex;
+  justify-content: space-between;
+}
+
+.dropdown-choice:hover {
+  color: white;
+  background-color: black;
+}
