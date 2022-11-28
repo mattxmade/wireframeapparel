@@ -1,4 +1,5 @@
 import React from "react";
+import "./SearchBar.style.scss";
 
 const SearchBar = (props) => {
   const HandleSearchInput = (e) => {
