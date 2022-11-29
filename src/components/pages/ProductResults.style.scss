@@ -1,6 +1,9 @@
 @use "../../sass/variables.scss" as *;
 @use "../../sass/mixins/media-query.scss" as *;
 
+/*=====================
+  Main: Browse/Search
+ ======================*/
 .main--browse,
 .main--search {
   gap: 1rem;
