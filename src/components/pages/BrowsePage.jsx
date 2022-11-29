@@ -12,8 +12,6 @@ import useFilter from "../hooks/useFilter";
 import ProductResults from "./ProductResults";
 import ResultCard from "./ResultCard";
 
-// import "./CatalogPage.style.scss";
-
 const BrowsePage = (props) => {
   const id = "browse";
   const location = useLocation();
