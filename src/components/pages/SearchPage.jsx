@@ -10,10 +10,10 @@ import useSort from "../hooks/useSort";
 import useFilter from "../hooks/useFilter";
 
 import ProductResults from "./ProductResults";
-import ItemCard from "../core/ItemCard";
-import "./CatalogPage.style.scss";
+import ResultCard from "./ResultCard";
 
 const SearchPage = (props) => {
+  const id = "search";
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -54,8 +54,7 @@ const SearchPage = (props) => {
   };
 
   const viewProps = {
-    type: "search",
-
+    type: id,
     handleCategory,
     handleSortProducts,
     handleFilterProducts,
@@ -92,7 +91,7 @@ const SearchPage = (props) => {
             {searchResults.map(
               (item, index) =>
                 item && (
-                  <ItemCard
+                  <ResultCard
                     item={item}
                     key={index}
                     type={"Search"}
