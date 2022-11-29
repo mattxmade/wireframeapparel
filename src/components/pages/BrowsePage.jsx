@@ -9,12 +9,13 @@ import LocalStorage from "../../data/LocalStorage.module";
 import useSort from "../hooks/useSort";
 import useFilter from "../hooks/useFilter";
 
-import Products from "./Products";
-import ItemCard from "../core/ItemCard";
+import ProductResults from "./ProductResults";
+import ResultCard from "./ResultCard";
 
-import "./CatalogPage.style.scss";
+// import "./CatalogPage.style.scss";
 
-const Catalog = (props) => {
+const BrowsePage = (props) => {
+  const id = "browse";
   const location = useLocation();
 
   const [cache, setCache] = useState();
@@ -60,8 +61,7 @@ const Catalog = (props) => {
   };
 
   const viewProps = {
-    type: "browse",
-
+    type: id,
     handleCategory,
     handleSortProducts,
     handleFilterProducts,
@@ -84,17 +84,17 @@ const Catalog = (props) => {
 
   useEffect(() => cache && handleProcessData(), [cache]);
 
-  // items per page
+  // TODO items per page
 
   return (
     <Fragment>
-      <Products view={viewProps} productCategory={category}>
+      <ProductResults view={viewProps} productCategory={category} id={id}>
         {browseResults?.length > 0 && (
           <div className="product-results">
             {browseResults.map(
               (item, index) =>
                 item && (
-                  <ItemCard
+                  <ResultCard
                     item={item}
                     key={index}
                     type={"Search"}
@@ -104,14 +104,14 @@ const Catalog = (props) => {
             )}
           </div>
         )}
-      </Products>
+      </ProductResults>
     </Fragment>
   );
 };
 
-export default Catalog;
+export default BrowsePage;
 
-// Catalog.propTypes = {
+// BrowsePage.propTypes = {
 //   clickThroughProductType: PropTypes.string,
 //   handleProductSelection: PropTypes.func,
 // };
