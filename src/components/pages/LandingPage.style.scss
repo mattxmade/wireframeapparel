@@ -1,0 +1,157 @@
+@use "../../sass/variables" as *;
+@use "../../sass/mixins/media-query" as *;
+
+/*==================
+  Main: LandingPage
+ ===================*/
+.main--landing {
+  padding: 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  background: linear-gradient(180deg, rgb(0, 225, 225, 0.25), gainsboro 70%);
+
+  @include mq(tablet) {
+    align-items: center;
+    justify-content: baseline;
+    flex-direction: column-reverse;
+  }
+
+  p {
+    z-index: 1;
+    position: relative;
+    overflow: scroll;
+  }
+}
+
+.landing {
+  overflow: scroll;
+}
+
+.landing__header {
+  z-index: 15;
+  height: 100vh;
+  bottom: 0;
+  padding: 0;
+  border: none;
+  position: fixed;
+  background-color: transparent;
+
+  ul {
+    flex-wrap: nowrap;
+    flex-direction: column-reverse;
+  }
+}
+
+.landing__brand-content {
+  z-index: 9;
+  overflow: hidden;
+  position: relative;
+
+  flex: auto;
+  align-self: flex-start;
+  display: flex;
+
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-between;
+
+  border: 0.1rem double white; // outline
+
+  @include mq(tablet) {
+    flex: content;
+    align-self: center;
+    flex-direction: row;
+    margin: 6rem 1rem 25vh;
+  }
+
+  @include mq(small) {
+    margin-bottom: 25%;
+  }
+
+  li {
+    width: 100%;
+    height: 21.3vh;
+    outline: 1px solid white; // outline
+    background-color: pink;
+
+    @include mq(tablet) {
+      width: calc(100vw / 3);
+      height: calc(100vw / 3);
+    }
+  }
+}
+
+.grid-container {
+  z-index: 1;
+  width: 100vw;
+  height: 80vh;
+
+  position: fixed;
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  outline: none;
+  bottom: -15rem;
+}
+
+.grid-container__grid,
+.grid-container__mask {
+  height: 200rem;
+  min-height: 200vh;
+  position: absolute;
+}
+
+.grid-container__grid {
+  outline: inherit;
+}
+
+.animate--grid__rotation {
+  transition: 5s;
+  transform: rotate3d(2, -1, -1, 0);
+  transition-timing-function: bezier(0.25, 0.75, 1, 1);
+}
+
+#svg-line-grid {
+  outline: inherit;
+  fill: transparent;
+}
+
+#svg-line-grid.animate--grid__fill {
+  fill: aliceblue;
+  transition: 5s;
+}
+
+#svg-rect-sky,
+#svg-rect-plane {
+  fill: gainsboro;
+}
+
+#svg-rect-sky {
+  fill: transparent;
+}
+
+.reveal {
+  right: 0;
+  position: absolute;
+}
+
+#mask {
+  z-index: 3000;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-color: gainsboro;
+}
+
+#mask.animate--mask__transparency {
+  transition: 1.2s;
+  background-color: transparent;
+}
+
+#mask.animate--mask_z-index {
+  z-index: -1;
+}
