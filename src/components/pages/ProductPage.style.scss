@@ -1,0 +1,264 @@
+@use "../../sass/variables.scss" as *;
+@use "../../sass/mixins/media-query.scss" as *;
+
+/*===================
+  Content Container
+ ====================*/
+.product-page {
+  width: 100%;
+  height: 35rem;
+  padding: 4rem 2rem;
+
+  display: flex;
+
+  @include mq(tablet) {
+    padding: 0;
+    flex-direction: column;
+
+    .canvas-container {
+      width: 100%;
+      height: 50%;
+    }
+  }
+}
+
+/*================
+  Product Viewer
+ =================*/
+canvas {
+  touch-action: none; // https://use-gesture.netlify.app/docs/extras/#touch-action
+}
+
+.canvas-container {
+  width: 50%;
+  height: 100%;
+  position: relative;
+
+  box-shadow: 0 0 0.5rem 0.1rem rgb(90, 90, 90);
+  background: linear-gradient(45deg, lightgrey, steelblue, lightgrey);
+}
+
+.attach-canvas-to-product-page {
+  // append before product info
+  position: relative;
+  z-index: 0;
+}
+
+/*============================
+  Product Viewer: Loadscreen
+ ============================*/
+.canvas-loadscreen {
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  position: absolute;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(45deg, lightgrey, steelblue, lightgrey);
+
+  svg {
+    width: 8rem;
+    height: 8rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    fill: black;
+    animation: 3s infinite normal rotate;
+  }
+
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+/*=============================
+  Product Viewer: Placeholder
+ =============================*/
+.placeholder-image-cont {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+
+  img {
+    position: relative;
+    left: -0.2px;
+    top: 0.9px;
+  }
+}
+
+/*=============
+  Product Info
+ ==============*/
+.product-details {
+  overflow-x: scroll;
+
+  gap: 3rem;
+
+  border: 0.2rem solid #c7c7c7;
+  border-left: none;
+  padding: 1rem 1rem 1rem 3rem;
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+
+  /*==============
+    Product Name
+   ===============*/
+  h2 {
+    padding: 0 3.5rem 0 1rem;
+    width: fit-content;
+    font-size: 6rem;
+    background-color: white;
+    clip-path: polygon(
+      0000 000,
+      100% 000,
+      100% 85%,
+      95% 100%,
+      000 100%,
+      000 100%,
+      000 0000
+    );
+
+    @include mq(tablet) {
+      font-size: 3rem;
+
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+
+      p {
+        font-size: 2rem;
+      }
+    }
+  }
+
+  p {
+    font-size: 2.5rem;
+  }
+
+  .product-price {
+    width: fit-content;
+  }
+
+  @include mq(tablet) {
+    padding: 1rem;
+    border: none;
+
+    width: 100%;
+    height: 50%;
+  }
+}
+
+/*====================
+  Product Properties
+======================*/
+.product-color {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  ul {
+    @include mq(tablet) {
+      width: fit-content;
+    }
+  }
+}
+
+.product-color ul li {
+  width: 3rem;
+  height: 3rem;
+
+  @include mq(tablet) {
+    width: 2rem;
+    height: 2rem;
+  }
+}
+
+.product-sizing {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  ul {
+    @include mq(tablet) {
+      width: 65%;
+    }
+  }
+}
+
+/*==================
+  Product Quantity
+====================*/
+button {
+  cursor: pointer;
+}
+
+.product-options {
+  gap: 2rem;
+  display: flex;
+
+  justify-self: flex-end;
+
+  @include mq(tablet) {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .quantity-options {
+    display: flex;
+    align-items: center;
+
+    /*Quantity text*/
+    p {
+      margin: 0.5rem;
+      font-size: 2rem;
+      padding: 1rem 2rem;
+      border-radius: 1rem;
+      box-shadow: inset 0 0 0.5rem -0.1rem black;
+    }
+
+    /*Increment/Decrement*/
+    button {
+      width: 5rem;
+      height: 4rem;
+      font-size: 3rem;
+      border: none;
+      border-radius: 1rem;
+      position: relative;
+      box-shadow: inset 0 0 0.5rem 0.2rem rgb(204, 204, 204);
+      overflow: hidden;
+    }
+  }
+
+  /*====================
+    Add to Cart Button
+  =====================*/
+  .add-to-cart {
+    color: black;
+    background-color: rgb(140, 200, 140);
+
+    width: 12rem;
+    height: 6rem;
+
+    border-radius: 1rem;
+    border: 0.2rem solid gray;
+  }
+
+  .add-to-cart:hover {
+    color: white;
+    background-color: lightseagreen;
+  }
+}
