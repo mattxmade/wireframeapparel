@@ -1,0 +1,103 @@
+/*====================
+  Product-result Card
+======================*/
+.product-result {
+  object-fit: cover;
+  aspect-ratio: 1 / 1;
+
+  position: relative;
+  height: max-content;
+  margin-right: 0.75rem;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  background-color: rgba(77, 77, 116);
+  clip-path: polygon(100% 0, 100% 0%, 100% 100%, 0 100%, 0 0);
+
+  /*===============
+    Product-Image
+  ================*/
+  img {
+    padding: 1rem;
+    flex: auto;
+    width: 100%;
+    height: auto;
+  }
+
+  /*====================
+    Image Link wrapper
+  =====================*/
+  a {
+    padding: 0;
+  }
+}
+
+/*====================
+  Product Name/Price
+======================*/
+.product-result__content {
+  padding: 0.5rem;
+  gap: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: gainsboro;
+
+  h4,
+  p {
+    color: black;
+    background-color: white;
+    border-radius: 0.2rem;
+    box-shadow: 0 0 0.2rem 0.05rem rgb(210, 210, 210);
+  }
+
+  h4 {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: inline-block; // https://stackoverflow.com/a/17783233
+  }
+
+  p {
+    text-align: center;
+    width: 30%;
+  }
+}
+
+.product-name,
+.product-price {
+  padding: 0.2rem;
+}
+
+.product-name {
+  letter-spacing: 0.2rem;
+  font-family: "Bebas Neue", cursive;
+}
+
+.product-price {
+  font-family: "Rajdhani", sans-serif;
+}
+
+.product-mask {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  position: absolute;
+  background-color: whitesmoke;
+}
+
+/*=========================
+  On Card Load Transition
+==========================*/
+.reveal-item {
+  transition: 0.3s;
+  background-color: transparent;
+}
+
+.clip-container-path {
+  transition: 0.3s;
+  clip-path: polygon(70% 0, 100% 15%, 100% 100%, 0 100%, 0 0);
+}
