@@ -13,7 +13,7 @@ import CartWidget from "./widgets/CartWidget.jsx";
 import CartPage from "./pages/CartPage.jsx";
 import SearchPage from "./pages/SearchPage.jsx";
 import LandingPage from "./pages/LandingPage.jsx";
-import CatalogPage from "./pages/CatalogPage.jsx";
+import BrowsePage from "./pages/BrowsePage.jsx";
 import ProductPage from "./pages/ProductPage.jsx";
 import NoMatchPage from "./pages/NoMatchPage.jsx";
 import CustomisePage from "./pages/CustomisePage.jsx";
@@ -113,7 +113,6 @@ const App = () => {
             searchInput={searchInput}
             handleSearchQuery={handleSearchQuery}
           />
-          {/* <NavBar paths={paths} /> */}
           <CartWidget currentOrderTotal={currentOrderTotal} />
         </Header>
 
@@ -126,7 +125,7 @@ const App = () => {
           <Route
             path="/shop"
             element={
-              <CatalogPage
+              <BrowsePage
                 clickThroughProductType={clickThroughProductType}
                 handleProductSelection={handleProductSelection}
                 handleLastPath={handleLastPath}
