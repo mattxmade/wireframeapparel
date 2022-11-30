@@ -4,7 +4,7 @@
 /*================
   Cart Page View
 ==================*/
-.cart {
+.cart-page {
   flex: 1;
   gap: 2rem;
   display: flex;
@@ -21,7 +21,7 @@
 /*==============
   Page Heading
 ================*/
-.cart__heading {
+.cart-page__heading {
   h2 {
     font-size: 5rem;
   }
@@ -32,9 +32,9 @@
 }
 
 /*=============
-  Subcontainer
+  Main Content
 ===============*/
-.cart__staging {
+.cart-page__content {
   gap: 2rem;
   flex: auto;
   display: flex;
@@ -48,107 +48,130 @@
 /*============
   Cart Items
 ==============*/
-.cart__staging--details {
+.cart-items {
   gap: 1rem;
   flex: auto;
   display: flex;
   flex-direction: column;
   background: var(--background);
   position: relative;
-
-  ul:last-child {
-    align-self: flex-end;
-    justify-self: flex-end;
-  }
 }
 
-.cart-items,
-.cart-total {
+/*===========
+  Cart Item
+=============*/
+.cart-item {
   gap: 1.5rem;
-  padding: 3rem;
+  display: flex;
+  width: 100%;
+  padding: 2rem;
   background-color: white;
+}
 
+.cart-item__overview {
+  gap: 1rem;
+  flex: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/*==========
+  Thumbnail
+============*/
+.cart-item__thumbnail {
+  cursor: pointer;
+  width: auto;
+  height: 4rem;
+}
+
+/*==============
+  Item Details
+================*/
+.cart-item__heading,
+.cart-item__options {
+  flex: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
-
-  li {
-    gap: inherit;
-    display: inherit;
-    align-items: inherit;
-  }
-
-  li:first-child {
-    flex: 1;
-  }
-
-  li:last-child {
-    gap: 2rem;
-    width: fit-content;
-
-    p:last-child {
-      font-weight: bold;
-      width: 12rem;
-    }
-  }
 }
 
-.cart-items img,
-.fa-trash-icon {
-  cursor: pointer;
-  height: auto;
+/*================
+  Item Name/Price
+==================*/
+.cart-item__heading {
+  font-size: 2.5rem;
+  font-weight: bold;
 }
 
-.cart-items img {
-  width: 4rem;
-}
-
-.fa-trash-icon {
-  min-width: 1.6rem;
-  max-width: 1.6rem;
-}
-
-.cart-item-quantity-container {
-  width: 1.2rem;
+/*===============================
+  Remove Item / Update Quantity
+================================*/
+.cart-item__edit {
   display: flex;
   align-items: center;
-  flex-direction: column;
 
-  i {
-    width: 100%;
-    height: 100%;
+  i,
+  p {
+    width: 4rem;
+    text-align: center;
   }
 
   p {
-    width: fit-content;
+    top: 0.3rem;
+    position: relative;
   }
+
+  svg {
+    width: 1.8rem;
+  }
+}
+
+/*===============
+  Item Quantity
+================*/
+.cart-item__quantity {
+  display: flex;
+}
+
+/*============
+  Cart Total
+==============*/
+.cart-total {
+  align-self: flex-end;
+  justify-self: flex-end;
 }
 
 .cart-total {
   padding: 0;
+  display: flex;
+  align-items: center;
+  background-color: white;
+}
 
-  li {
-    margin: 3rem 0;
-  }
+.cart-total__title {
+  margin: 0 2rem;
+}
 
-  li:first-child {
-    margin-left: 3rem;
-  }
+.cart-total__price {
+  display: grid;
+  align-items: center;
+  justify-content: flex-end;
 
-  li:last-child {
-    height: 100%;
-    min-width: 14rem;
-    color: white;
-    padding: 0 3rem;
-    background: var(--brand-base-color);
-    clip-path: var(--clip-path);
-  }
+  margin: 3rem 0;
+  padding-right: 2rem;
+
+  height: 100%;
+  min-width: 7rem;
+  width: fit-content;
+  color: white;
+  background: var(--brand-base-color);
+  clip-path: var(--clip-path);
 }
 
 /*=================
   Aside: Checkout
 ===================*/
-.cart__staging--place-order {
+.cart-checkout {
   gap: 6rem;
   width: 35rem;
   height: 100%;
@@ -199,6 +222,9 @@
   background-color: lightseagreen;
 }
 
+/*==============
+  Payment List
+================*/
 .payment-list {
   display: grid;
   border-radius: 1rem;
