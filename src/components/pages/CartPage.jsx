@@ -5,8 +5,10 @@ import PropTypes from "prop-types";
 import AwesomeSvg from "../svg-icons/Awesome.module.jsx";
 import PaymentSvg from "../svg-icons/Payment.module.jsx";
 import GridTunnelSvg from "../svg-images/GridTunnelSvg.jsx";
+import capitaliseString from "../../utility/capitaliseString";
 import depluraliseString from "../../utility/depluraliseString.js";
 
+import ProductData from "../../data/product.data.js";
 import "./CartPage.style.scss";
 
 const fixPrice = (price) => Number.parseFloat(price).toFixed(2);
@@ -17,50 +19,66 @@ const CartItem = (props) => {
   const TrashIcon = AwesomeSvg.TrashIcon;
   const { AngleUpIcon, AngleDownIcon } = AwesomeSvg;
 
+  // TODO: Break up component
+
   return (
-    <Fragment>
-      <ul className="cart-items">
-        <li>
-          <img src={item.image.src} alt={item.image.alt} />
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <p>
-              {item.name} {depluraliseString(item.type)}
-            </p>
+    <div className="cart-item">
+      <img
+        className="cart-item__thumbnail"
+        src={item.image.src}
+        alt={item.image.alt}
+      />
+
+      <div className="cart-item__overview">
+        <ul className="cart-item__heading">
+          <li className="cart-item__name">
+            {capitaliseString(item.name)} {depluraliseString(item.type)}
+          </li>
+
+          {/* <p>{"£" + fixPrice(item.price * item.quantity)}</p> */}
+          <li className="cart-item__price">
+            {"£" + item.price * item.quantity}
+          </li>
+        </ul>
+
+        <ul className="cart-item__options">
+          <li className="cart-item__attributes">
             <p>{item.size}</p>
-            <p>{item.color}</p>
-          </div>
-        </li>
-        <li>
-          <div onClick={() => handleCartItem(variantID, "remove")}>
-            <TrashIcon className="cart-icon" />
-          </div>
+            <p>{item.color === "#202020" ? "black" : item.color}</p>
+          </li>
 
-          <div className="cart-item-quantity-container">
-            <i
-              style={{ cursor: "pointer" }}
-              onClick={(e) => {
-                e.preventDefault();
-                handleCartItem(variantID, "increment");
-              }}
-            >
-              <AngleUpIcon />
+          <li className="cart-item__edit">
+            <i onClick={() => handleCartItem(variantID, "remove")}>
+              <TrashIcon className="cart-icon" />
             </i>
-            <p>{item.quantity}</p>
-            <i
-              style={{ cursor: "pointer" }}
-              onClick={(e) => {
-                e.preventDefault();
-                handleCartItem(variantID, "decrement");
-              }}
-            >
-              <AngleDownIcon />
-            </i>
-          </div>
 
-          <p>{"£" + fixPrice(item.price * item.quantity)}</p>
-        </li>
-      </ul>
-    </Fragment>
+            <div className="cart-item__quantity">
+              <i
+                style={{ cursor: "pointer" }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleCartItem(variantID, "increment");
+                }}
+              >
+                <AngleUpIcon />
+              </i>
+
+              <p>{item.quantity}</p>
+
+              <i
+                style={{ cursor: "pointer" }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleCartItem(variantID, "decrement");
+                }}
+              >
+                <AngleDownIcon />
+              </i>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
   );
 };
 
@@ -78,10 +96,6 @@ const CartPage = (props) => {
   const location = useLocation();
   useEffect(() => () => props.handleLastPath(location.pathname), []);
 
-  let cartTotal = 0;
-  let prevTotal = 0;
-  let totalNumberOfItems = 0;
-
   const { AmazonPayLogo, ApplePayLogo, DigitalPayLogos } = PaymentSvg;
   const { GooglePayLogo, PayPalLogo, VisaLogo } = PaymentSvg;
 
@@ -91,23 +105,28 @@ const CartPage = (props) => {
 
     return () => {
       body.style.overflowY = "hidden";
+      props.updateCustomerOrder(customerCart);
     };
   }, []);
 
-  const updateItemQuantity = (itemIndexToUpdate, action) => {
-    let updateCart = customerCart.map((item) => item);
-    const itemToUpdate = updateCart[itemIndexToUpdate];
+  const updateItemQuantity = (itemVariantID, action) => {
+    const updateCart = [...customerCart];
+
+    const itemToUpdate = customerCart.find(
+      (item) => item.variant === itemVariantID
+    );
+
+    for (const [key, value] of Object.entries(itemToUpdate)) {
+      console.log(`${key}: ${value}`);
+    }
 
     action === "increment"
       ? (itemToUpdate.quantity += 1)
       : (itemToUpdate.quantity -= 1);
 
-    if (itemToUpdate.quantity !== 0) return setCustomerCart(updateCart);
+    if (itemToUpdate.quantity !== 0) return setCustomerCart([...updateCart]);
 
-    updateCart.splice(itemIndexToUpdate, 1);
-    if (updateCart.length === 0) updateCart = [];
-
-    setCustomerCart(updateCart);
+    removeItemFromCart(itemVariantID);
   };
 
   const removeItemFromCart = (itemByVariantID) => {
@@ -130,6 +149,10 @@ const CartPage = (props) => {
   };
 
   useEffect(() => {
+    let cartTotal = 0;
+    let prevTotal = 0;
+    let totalNumberOfItems = 0;
+
     const updatedOrder = [];
     customerCart.forEach((item) => (item ? updatedOrder.push(item) : null));
 
@@ -140,27 +163,25 @@ const CartPage = (props) => {
       prevTotal = cartTotal;
     });
 
-    cartTotal = fixPrice(cartTotal);
+    // cartTotal = fixPrice(cartTotal);
 
     setCartOrderTotal(cartTotal);
     setNumberOfItemsInCart(totalNumberOfItems);
 
     props.handleCartCount(updatedOrder);
-
-    return () => props.updateCustomerOrder(updatedOrder);
   }, [customerCart]);
 
   return (
-    <main className="cart">
-      <h2 className="cart__heading">
+    <main className="cart-page">
+      <h2 className="cart-page__heading">
         <span>
           {numberOfItemsInCart} {numberOfItemsInCart === 1 ? "item" : "items"}{" "}
           in your cart
         </span>
       </h2>
 
-      <div className="cart__staging">
-        <div className="cart__staging--details">
+      <div className="cart-page__content">
+        <div className="cart-items">
           {/* TODO: render placeholder if no items in cart */}
 
           {/* {!itemsInCart.length ? (
@@ -193,13 +214,13 @@ const CartPage = (props) => {
 
           {numberOfItemsInCart ? (
             <ul className="cart-total">
-              <li>Total</li>
-              <li>{"£" + cartOrderTotal}</li>
+              <li className="cart-total__title">Total</li>
+              <li className="cart-total__price">{"£" + cartOrderTotal}</li>
             </ul>
           ) : null}
         </div>
 
-        <div className="cart__staging--place-order">
+        <div className="cart-checkout">
           <h3>Guest checkout</h3>
 
           <ul className="payment-list">
