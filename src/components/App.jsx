@@ -7,8 +7,10 @@ import {
 } from "react-router-dom";
 
 import Header from "./core/Header.jsx";
+import Footer from "./core/Footer.jsx";
 import SearchBar from "./widgets/SearchBar.jsx";
 import CartWidget from "./widgets/CartWidget.jsx";
+import LocalStorage from "../data/LocalStorage.module.js";
 
 import CartPage from "./pages/CartPage.jsx";
 import SearchPage from "./pages/SearchPage.jsx";
@@ -28,7 +30,9 @@ const App = () => {
   const [searchInput, setSearchInput] = useState("");
 
   const [currentOrderTotal, setCurrentOrderTotal] = useState(0);
-  const [customerOrder, setCustomerOrder] = useState([]);
+  const [customerOrder, setCustomerOrder] = useState(
+    LocalStorage.get("cart") ?? []
+  );
   // const refCustomerOrder = useRef(customerOrder);
 
   const handleProductSelection = (product) => {
@@ -66,6 +70,7 @@ const App = () => {
     };
 
     const currentOrder = handleOrder();
+    LocalStorage.set("cart", currentOrder);
 
     handleCartCount(currentOrder);
     setCustomerOrder(currentOrder);
@@ -176,7 +181,7 @@ const App = () => {
           <Route path="*" element={<NoMatchPage />} />
         </Routes>
 
-        <footer></footer>
+        <Footer />
       </div>
     </Fragment>
   );
