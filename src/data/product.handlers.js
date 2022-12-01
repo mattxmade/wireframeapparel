@@ -30,6 +30,7 @@ const getDataFromFilename = (() => {
   const productStyle = {};
 
   const productTypes = {
+    ht: "hats",
     ts: "t-shirt",
     fw: "footwear",
     tn: "trainers",
