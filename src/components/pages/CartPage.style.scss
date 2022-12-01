@@ -63,6 +63,8 @@
 .cart-item {
   gap: 1.5rem;
   display: flex;
+  align-items: center;
+
   width: 100%;
   padding: 2rem;
   background-color: white;
@@ -79,9 +81,12 @@
   Thumbnail
 ============*/
 .cart-item__thumbnail {
+  padding: 1rem;
   cursor: pointer;
   width: auto;
-  height: 4rem;
+  height: 8rem;
+  background-color: rgb(40, 61, 117);
+  outline: 0.1rem solid lightgrey;
 }
 
 /*==============
@@ -110,9 +115,15 @@
   display: flex;
   align-items: center;
 
+  i {
+    height: 2.8rem;
+    outline: 0.1rem solid rgb(238, 238, 238);
+  }
+
   i,
   p {
     width: 4rem;
+    font-weight: bold;
     text-align: center;
   }
 
@@ -131,6 +142,7 @@
 ================*/
 .cart-item__quantity {
   display: flex;
+  outline: 0.1rem solid rgb(238, 238, 238);
 }
 
 /*============
@@ -181,6 +193,7 @@
   padding: 3rem 1rem 1rem;
 
   display: flex;
+  align-items: center;
   flex-direction: column-reverse;
   justify-content: space-around;
 
@@ -192,6 +205,8 @@
   }
 
   h3 {
+    align-self: flex-start;
+
     @include mq(tablet) {
       top: 1rem;
       left: 2rem;
@@ -205,15 +220,17 @@
   font-size: 2.5rem;
   background-color: rgb(140, 200, 140);
 
-  width: 100%;
+  width: 75%;
   height: 6rem;
 
   border-radius: 1rem;
-  border: 0.2rem solid gray;
+  border: 0.4rem double gray;
   transition: 0.15s;
+  box-shadow: 0 0 0.5rem 0.1rem rgba(65, 65, 65, 0.3);
 
   @include mq(tablet) {
     width: 25%;
+    font-size: 2rem;
   }
 }
 
@@ -236,6 +253,10 @@
 
     display: flex;
     justify-content: center;
+
+    @include mq(tablet) {
+      margin: 0.5rem 0;
+    }
   }
 
   @include mq(tablet) {
