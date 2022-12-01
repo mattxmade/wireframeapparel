@@ -29,9 +29,11 @@ const App = () => {
   const [lastPath, setLastPath] = useState();
   const [searchInput, setSearchInput] = useState("");
 
-  const [currentOrderTotal, setCurrentOrderTotal] = useState(0);
+  const [currentOrderTotal, setCurrentOrderTotal] = useState(
+    LocalStorage.get("cart-total") ?? 0
+  );
   const [customerOrder, setCustomerOrder] = useState(
-    LocalStorage.get("cart") ?? []
+    LocalStorage.get("cart-items") ?? []
   );
   // const refCustomerOrder = useRef(customerOrder);
 
@@ -70,7 +72,7 @@ const App = () => {
     };
 
     const currentOrder = handleOrder();
-    LocalStorage.set("cart", currentOrder);
+    LocalStorage.set("cart-items", currentOrder);
 
     handleCartCount(currentOrder);
     setCustomerOrder(currentOrder);
@@ -84,8 +86,9 @@ const App = () => {
 
   const handleCartCount = (array) => {
     let itemsInCart = 0;
-
     array.map((item) => (itemsInCart += item.quantity));
+
+    LocalStorage.set("cart-total", itemsInCart);
     setCurrentOrderTotal(itemsInCart);
   };
 
