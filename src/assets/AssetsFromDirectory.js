@@ -13,6 +13,10 @@ const AssetsFromDirectory = (directory, imageType) => {
       getAssets(require.context("./designs", false, /\.(webp)$/));
       break;
 
+    case "hats":
+      getAssets(require.context("./catalog/hats", false, /\.(webp)$/));
+      break;
+
     case "tshirts":
       getAssets(require.context("./catalog/tshirts", false, /\.(webp)$/));
       break;
