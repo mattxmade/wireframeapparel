@@ -22,7 +22,7 @@ const Trainers = (() => {
     const designDecal = useTexture(product.image.design);
 
     let scale = [28, 28, 28];
-    let position = [-1, -3, 0];
+    let position = [-1, -2, 0];
     let rotation = [0, degreesToRadian(45), 0];
 
     const decals = {
