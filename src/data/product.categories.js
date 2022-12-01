@@ -10,11 +10,11 @@ const categories = {
     cat03: "StockImg",
   },
 
-  Hats: {
-    cat00: "All",
-    cat01: "Wireframe",
-    cat02: "Developer",
-  },
+  // Hats: {
+  //   cat00: "All",
+  //   cat01: "Wireframe",
+  //   cat02: "Developer",
+  // },
 
   Footwear: {
     cat00: "All",
