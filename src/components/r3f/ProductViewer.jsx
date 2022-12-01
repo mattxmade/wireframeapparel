@@ -2,6 +2,7 @@ import React, { Suspense, useEffect, useRef, useState } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { Html, Environment, PresentationControls } from "@react-three/drei";
 
+import Hat from "./Hat";
 import TShirt from "./TShirt";
 import Trainers from "./Trainers";
 import Skateboard from "./Skateboard";
@@ -64,6 +65,9 @@ const ProductViewer = (props) => {
 
       case "footwear":
         return Trainers.create;
+
+      case "hat":
+        return Hat.create;
 
       default:
         return TShirt.create;
