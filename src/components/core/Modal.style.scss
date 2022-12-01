@@ -1,0 +1,127 @@
+@use "../../sass/variables" as *;
+@use "../../sass/mixins/media-query" as *;
+
+dialog {
+  height: 75%;
+  min-width: 35rem;
+  max-width: 80rem;
+  position: absolute;
+  border: none;
+  background-color: rgba(70, 130, 180, 0.4);
+  margin: auto;
+  padding: 1rem 0;
+  cursor: auto;
+
+  @include mq(small) {
+    max-width: 50rem;
+  }
+
+  h2 {
+    font-size: 2.5rem;
+  }
+}
+
+.modal__content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  place-content: center;
+  color: gainsboro;
+}
+
+.modal__content .modal-icon {
+  z-index: 1;
+  margin: 1rem 0;
+  top: 1rem;
+  right: 4rem;
+  position: absolute;
+
+  @include mq(small) {
+    right: 3.5rem;
+  }
+}
+
+.close-modal,
+.social-icon {
+  cursor: pointer;
+  width: 3rem;
+  height: auto;
+
+  svg {
+    fill: gainsboro;
+    width: inherit;
+    height: inherit;
+  }
+}
+
+.ul-tabs {
+  margin-top: 2rem;
+  width: 90%;
+  display: flex;
+  align-items: center;
+  font-size: 2rem;
+  justify-content: space-between;
+}
+
+.li-tab {
+  cursor: pointer;
+  text-align: center;
+  width: 20%;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  background-color: rgb(43, 38, 38);
+}
+
+.tab-area {
+  flex: 1;
+  padding: 1rem;
+  width: 90%;
+  background-color: rgb(43, 38, 38);
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+  font-size: 4rem;
+  display: grid;
+  justify-content: center;
+}
+.tab-area .tab-area__author-info,
+.tab-area .tab-area__project-info {
+  gap: 2rem;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+.tab-area .tab-area__project-info {
+  position: relative;
+}
+.tab-area__author-info {
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.tab-area__author-info .social-links {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.project-info__logo {
+  width: 4rem;
+  height: auto;
+  fill: gainsboro;
+}
+
+:focus-visible {
+  outline: none;
+}
+
+.faq-cont {
+  display: grid;
+}
+
+.faq-cont__content_list {
+  gap: 1rem;
+  display: flex;
+  flex-direction: column;
+}
