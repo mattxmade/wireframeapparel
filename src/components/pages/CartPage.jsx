@@ -2,14 +2,12 @@ import React, { Fragment, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
 
+import "./CartPage.style.scss";
 import AwesomeSvg from "../svg-icons/Awesome.module.jsx";
 import PaymentSvg from "../svg-icons/Payment.module.jsx";
-import GridTunnelSvg from "../svg-images/GridTunnelSvg.jsx";
 import capitaliseString from "../../utility/capitaliseString";
 import depluraliseString from "../../utility/depluraliseString.js";
-
-import ProductData from "../../data/product.data.js";
-import "./CartPage.style.scss";
+import LocalStorage from "../../data/LocalStorage.module.js";
 
 const fixPrice = (price) => Number.parseFloat(price).toFixed(2);
 
@@ -88,7 +86,9 @@ CartItem.propTypes = {
 };
 
 const CartPage = (props) => {
-  const [customerCart, setCustomerCart] = useState([...props.itemsInCart]);
+  const [customerCart, setCustomerCart] = useState(
+    LocalStorage.get("cart-items") ?? [...props.itemsInCart]
+  );
 
   const [cartOrderTotal, setCartOrderTotal] = useState(0);
   const [numberOfItemsInCart, setNumberOfItemsInCart] = useState(0);
@@ -96,6 +96,7 @@ const CartPage = (props) => {
   const location = useLocation();
   useEffect(() => () => props.handleLastPath(location.pathname), []);
 
+  const { GlobeIcon } = AwesomeSvg;
   const { AmazonPayLogo, ApplePayLogo, DigitalPayLogos } = PaymentSvg;
   const { GooglePayLogo, PayPalLogo, VisaLogo } = PaymentSvg;
 
@@ -116,9 +117,9 @@ const CartPage = (props) => {
       (item) => item.variant === itemVariantID
     );
 
-    for (const [key, value] of Object.entries(itemToUpdate)) {
-      console.log(`${key}: ${value}`);
-    }
+    // for (const [key, value] of Object.entries(itemToUpdate)) {
+    //   console.log(`${key}: ${value}`);
+    // }
 
     action === "increment"
       ? (itemToUpdate.quantity += 1)
@@ -164,6 +165,8 @@ const CartPage = (props) => {
     });
 
     // cartTotal = fixPrice(cartTotal);
+    LocalStorage.set("cart-total", totalNumberOfItems);
+    LocalStorage.set("cart-items", updatedOrder);
 
     setCartOrderTotal(cartTotal);
     setNumberOfItemsInCart(totalNumberOfItems);
@@ -182,12 +185,14 @@ const CartPage = (props) => {
 
       <div className="cart-page__content">
         <div className="cart-items">
-          {/* TODO: render placeholder if no items in cart */}
-
-          {/* {!itemsInCart.length ? (
+          {!customerCart.length ? (
             <div
               style={{
                 width: "100%",
+                gap: "1rem",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
                 height: "-webkit-fill-available",
                 position: "absolute",
                 top: 0,
@@ -195,9 +200,22 @@ const CartPage = (props) => {
                 overflow: "hidden",
               }}
             >
-              <GridTunnelSvg height="100vh" fill={"darkcyan"} />
+              <i
+                style={{
+                  fill: "darkslategrey",
+                  width: "2rem",
+                  height: "auto",
+                  position: "relative",
+                  bottom: "0.15rem",
+                }}
+              >
+                <GlobeIcon />
+              </i>
+              <h2 style={{ fontSize: "3rem", color: "darkslategrey" }}>
+                Your Cart is Empty
+              </h2>
             </div>
-          ) : null} */}
+          ) : null}
 
           {customerCart.length
             ? customerCart.map((item, index) => {
