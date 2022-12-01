@@ -11,11 +11,13 @@
   justify-content: space-between;
   background: linear-gradient(180deg, rgb(0, 225, 225, 0.25), gainsboro 70%);
 
-  @include mq(tablet) {
-    align-items: center;
-    justify-content: baseline;
-    flex-direction: column-reverse;
-  }
+  padding-top: 3.5vh;
+
+  justify-content: center;
+  justify-content: space-between;
+
+  align-items: center;
+  flex-direction: column-reverse;
 
   p {
     z-index: 1;
@@ -43,49 +45,47 @@
   }
 }
 
-.landing__brand-content {
-  z-index: 9;
-  overflow: hidden;
+/*==============
+  Action Button
+ ===============*/
+.landing__call-to-action {
+  z-index: 10;
   position: relative;
-
-  flex: auto;
-  align-self: flex-start;
-  display: flex;
-
+  height: 15vh;
+  display: grid;
   align-items: center;
-  flex-direction: column;
-  justify-content: space-between;
-
-  border: 0.1rem double white; // outline
-
-  @include mq(tablet) {
-    flex: content;
-    align-self: center;
-    flex-direction: row;
-    margin: 6rem 1rem 25vh;
-  }
+  justify-content: center;
 
   @include mq(small) {
-    margin-bottom: 25%;
-  }
-
-  li {
-    width: 100%;
-    height: 21.3vh;
-    outline: 1px solid white; // outline
-    background-color: pink;
-
-    @include mq(tablet) {
-      width: calc(100vw / 3);
-      height: calc(100vw / 3);
-    }
+    margin-bottom: 10vh;
   }
 }
 
+.h2-call-to-action {
+  padding: 3rem;
+  font-size: 2.4rem;
+  background-color: aliceblue;
+  transform: translate(0, -30vh);
+  clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%, 0 30%);
+  // border-right: 0.5rem solid grey;
+  transition: 0.3s;
+}
+
+.h2-call-to-action:hover {
+  color: aliceblue;
+  background-color: black;
+  // border-right: 0.5rem solid aliceblue;
+}
+
+/*============
+  Background
+ =============*/
 .grid-container {
   z-index: 1;
   width: 100vw;
   height: 80vh;
+
+  height: 120vh;
 
   position: fixed;
   overflow: hidden;
@@ -107,11 +107,13 @@
 
 .grid-container__grid {
   outline: inherit;
+  transform: rotate3d(2, -1, -1, 0);
 }
 
 .animate--grid__rotation {
   transition: 5s;
-  transform: rotate3d(2, -1, -1, 0);
+
+  transform: rotate3d(-0.5, 1, 2, 80deg);
   transition-timing-function: bezier(0.25, 0.75, 1, 1);
 }
 
@@ -121,19 +123,23 @@
 }
 
 #svg-line-grid.animate--grid__fill {
-  fill: aliceblue;
+  fill: grey;
   transition: 5s;
 }
 
 #svg-rect-sky,
 #svg-rect-plane {
   fill: gainsboro;
+  fill: transparent;
 }
 
 #svg-rect-sky {
   fill: transparent;
 }
 
+/*================
+  Container Mask
+ ================*/
 .reveal {
   right: 0;
   position: absolute;
