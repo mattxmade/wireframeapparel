@@ -1,0 +1,33 @@
+@use "../../sass/variables" as *;
+@use "../../sass/mixins/media-query" as *;
+
+footer {
+  width: fit-content;
+  min-width: 20rem;
+  right: 0rem;
+  bottom: 0.5rem;
+  position: fixed;
+  padding: 0.5rem 2rem;
+}
+
+footer ul {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+footer a {
+  padding: 0;
+}
+
+footer i {
+  cursor: pointer;
+  fill: rgb(25, 25, 25);
+  width: 2.4rem;
+  height: auto;
+}
+
+footer ul > i {
+  transform: rotate(180deg);
+}
