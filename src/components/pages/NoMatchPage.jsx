@@ -5,7 +5,7 @@ const NoMatchPage = () => {
   let location = useLocation();
   const navigate = useNavigate();
 
-  useEffect(() => navigate("/"), []);
+  useEffect(() => navigate("/shop"), []);
 
   return (
     <div>
