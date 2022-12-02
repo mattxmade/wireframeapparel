@@ -6,10 +6,9 @@ import shop from "../../assets/carousel/wf_shop.webp";
 import shoe from "../../assets/carousel/wf_shoe.webp";
 import tees from "../../assets/carousel/wf_tees.webp";
 
+import AwesomeSvg from "../svg-icons/Awesome.module";
 import "./Carousel.style.scss";
 // import(/* webpackChunkName: "Carousel.style" */ "./Carousel.style.scss");
-
-const images = [sign, shop, bag, shoe, tees];
 
 const Chevron = (() => {
   const left = ({ className }) => (
@@ -35,39 +34,72 @@ const Chevron = (() => {
   return { left, right };
 })();
 
-const Tab = (props) => {
-  return (
-    <div className="carousel__bar">
-      <ul></ul>
-    </div>
-  );
-};
+// const getComputedWidth = (cssVariableName) => {
+//   const root = document.querySelector(":root");
+
+//   return window.innerWidth > 2375
+//     ? 1920
+//     : Number(
+//         getComputedStyle(root).getPropertyValue(cssVariableName).slice(0, -2)
+//       ); // slice -3 rem -2 px vw vh
+// };
 
 const getComputedWidth = (cssVariableName) => {
   const root = document.querySelector(":root");
+
   return Number(
     getComputedStyle(root).getPropertyValue(cssVariableName).slice(0, -2)
   ); // slice -3 rem -2 px vw vh
+};
+
+const isLargeViewport = () => (window.innerWidth > 608 ? true : false);
+
+const handleUnits = () => {
+  const width = window.innerWidth;
+
+  if (width > 608 && width >= 2375) return "px"; // 1920
+  if (width > 608) return "vw";
+
+  return "vh";
+};
+
+const handleWidth = () => {
+  const width = window.innerWidth;
+
+  if (width > 608 && width > 2375) return 1920;
+  if (width > 608) return 100;
+
+  return 100;
 };
 
 const Carousel = (props) => {
   const tabsRef = useRef();
   const carouselRef = useRef();
 
+  const autoplayRef = useRef();
+  const [autoplay, setAutoplay] = useState(true);
+
+  //const [unit, setUnit] = useState(handleUnits());
+  const [unit, setUnit] = useState(isLargeViewport() ? "vw" : "vh");
   const [width, setWidth] = useState(getComputedWidth("--carousel-width"));
 
-  let currentImage = 0;
-  let imageCount = images.length - 1;
+  const images = [sign, shop, bag, shoe, tees];
 
+  let currentImage = 0;
   let currentPosition = 0;
+  let imageCount = images.length - 1;
 
   const ChevronLeft = Chevron.left;
   const ChevronRight = Chevron.right;
+  const { PlayIcon, PauseIcon } = AwesomeSvg;
 
-  const handleViewportChange = (e) =>
+  const handleViewportChange = (e) => {
+    //setUnit(handleUnits());
+    setUnit(isLargeViewport() ? "vw" : "vh");
     setWidth(getComputedWidth("--carousel-width"));
+  };
 
-  useEffect(() => {
+  const resetSlides = () => {
     carouselRef.current.style.transform = "translate(0,0)";
 
     tabsRef.current.childNodes.forEach((tab) =>
@@ -78,21 +110,24 @@ const Carousel = (props) => {
 
     currentImage = 0;
     currentPosition = 0;
-  }, [width]);
+  };
 
-  useEffect(() => {
-    window.addEventListener("resize", handleViewportChange);
-    tabsRef.current.childNodes[0].classList.add("illuminate-tab");
+  const autoplaySlides = (playState) => {
+    if (playState && carouselRef.current && currentImage < imageCount)
+      moveToNextSlide();
 
-    return () => {
-      window.removeEventListener("resize", handleViewportChange);
-    };
-  }, []);
+    if (currentImage === 4) {
+      const resetTimeout = setTimeout(() => {
+        resetSlides();
+        clearTimeout(resetTimeout);
+      }, 7000);
+    }
+  };
 
-  const handleLeft = (e) => {
+  const moveToPrevSlide = (e) => {
     if (currentImage >= 1) {
       carouselRef.current.style.transform = `translate(${(currentPosition +=
-        width)}vw, 0)`;
+        width)}${unit}, 0)`;
 
       tabsRef.current.childNodes.forEach((tab) =>
         tab.classList.remove("illuminate-tab")
@@ -103,16 +138,10 @@ const Carousel = (props) => {
     }
   };
 
-  // setTimeout(() => {
-  //   setInterval(() => {
-  //     if (carousel && currentImage < imageCount) handleRight();
-  //   }, 3500);
-  // }, 3500);
-
-  const handleRight = (e) => {
+  const moveToNextSlide = (e) => {
     if (currentImage < imageCount) {
       carouselRef.current.style.transform = `translate(${(currentPosition -=
-        width)}vw, 0)`;
+        width)}${unit}, 0)`;
 
       tabsRef.current.childNodes.forEach((tab) =>
         tab.classList.remove("illuminate-tab")
@@ -121,6 +150,33 @@ const Carousel = (props) => {
       currentImage++;
       tabsRef.current.childNodes[currentImage].classList.add("illuminate-tab");
     }
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", handleViewportChange);
+    tabsRef.current.childNodes[0].classList.add("illuminate-tab");
+
+    const autoplayInterval = setTimeout(() => {
+      setInterval(() => autoplaySlides(autoplayRef.current), 7000);
+    }, 5000);
+
+    return () => {
+      clearInterval(autoplayInterval);
+      window.removeEventListener("resize", handleViewportChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    autoplayRef.current = autoplay;
+  }, [autoplay]);
+
+  useEffect(() => resetSlides(), [width]);
+
+  const mediaIconStyle = {
+    fill: "white",
+    width: "2rem",
+    height: "2rem",
+    cursor: "pointer",
   };
 
   return (
@@ -136,10 +192,16 @@ const Carousel = (props) => {
         <div className="carousel-viewer">
           <div className="carousel-border"></div>
           <div className="carousel__navigators">
-            <i className="fas fa-chevron-left  chevron" onClick={handleLeft}>
+            <i
+              className="fas fa-chevron-left  chevron"
+              onClick={moveToPrevSlide}
+            >
               <ChevronLeft />
             </i>
-            <i className="fas fa-chevron-right chevron" onClick={handleRight}>
+            <i
+              className="fas fa-chevron-right chevron"
+              onClick={moveToNextSlide}
+            >
               <ChevronRight />
             </i>
           </div>
@@ -153,17 +215,29 @@ const Carousel = (props) => {
               );
             })}
           </ul>
-        </div>
 
-        <ul ref={tabsRef} className="carousel__bar header__item--widgets">
-          {[...new Array(images.length)].map((val, index) => (
-            <li
-              key={index}
-              className="image-tab"
-              style={{ width: `calc(100vw/${imageCount + 1})` }}
-            />
-          ))}
-        </ul>
+          <ul ref={tabsRef} className="carousel__bar">
+            {[...new Array(images.length)].map((val, index) => (
+              <li
+                key={index}
+                className="image-tab"
+                style={{ width: `calc(100${unit}/${imageCount + 1})` }}
+              />
+            ))}
+          </ul>
+
+          <div className="autoplay-controls">
+            {!autoplay ? (
+              <i style={mediaIconStyle} onClick={() => setAutoplay(true)}>
+                <PlayIcon />
+              </i>
+            ) : (
+              <i style={mediaIconStyle} onClick={() => setAutoplay(false)}>
+                <PauseIcon />
+              </i>
+            )}
+          </div>
+        </div>
       </div>
     </Fragment>
   );
