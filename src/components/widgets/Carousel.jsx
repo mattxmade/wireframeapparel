@@ -8,7 +8,6 @@ import tees from "../../assets/carousel/wf_tees.webp";
 
 import AwesomeSvg from "../svg-icons/Awesome.module";
 import "./Carousel.style.scss";
-// import(/* webpackChunkName: "Carousel.style" */ "./Carousel.style.scss");
 
 const Chevron = (() => {
   const left = ({ className }) => (
@@ -34,16 +33,6 @@ const Chevron = (() => {
   return { left, right };
 })();
 
-// const getComputedWidth = (cssVariableName) => {
-//   const root = document.querySelector(":root");
-
-//   return window.innerWidth > 2375
-//     ? 1920
-//     : Number(
-//         getComputedStyle(root).getPropertyValue(cssVariableName).slice(0, -2)
-//       ); // slice -3 rem -2 px vw vh
-// };
-
 const getComputedWidth = (cssVariableName) => {
   const root = document.querySelector(":root");
 
@@ -54,24 +43,6 @@ const getComputedWidth = (cssVariableName) => {
 
 const isLargeViewport = () => (window.innerWidth > 608 ? true : false);
 
-const handleUnits = () => {
-  const width = window.innerWidth;
-
-  if (width > 608 && width >= 2375) return "px"; // 1920
-  if (width > 608) return "vw";
-
-  return "vh";
-};
-
-const handleWidth = () => {
-  const width = window.innerWidth;
-
-  if (width > 608 && width > 2375) return 1920;
-  if (width > 608) return 100;
-
-  return 100;
-};
-
 const Carousel = (props) => {
   const tabsRef = useRef();
   const carouselRef = useRef();
@@ -79,9 +50,11 @@ const Carousel = (props) => {
   const autoplayRef = useRef();
   const [autoplay, setAutoplay] = useState(true);
 
-  //const [unit, setUnit] = useState(handleUnits());
   const [unit, setUnit] = useState(isLargeViewport() ? "vw" : "vh");
   const [width, setWidth] = useState(getComputedWidth("--carousel-width"));
+
+  const unitRef = useRef();
+  const widthRef = useRef();
 
   const images = [sign, shop, bag, shoe, tees];
 
@@ -94,7 +67,6 @@ const Carousel = (props) => {
   const { PlayIcon, PauseIcon } = AwesomeSvg;
 
   const handleViewportChange = (e) => {
-    //setUnit(handleUnits());
     setUnit(isLargeViewport() ? "vw" : "vh");
     setWidth(getComputedWidth("--carousel-width"));
   };
@@ -113,7 +85,7 @@ const Carousel = (props) => {
   };
 
   const autoplaySlides = (playState) => {
-    if (playState && carouselRef.current && currentImage < imageCount)
+    if (autoplayRef.current && carouselRef.current && currentImage < imageCount)
       moveToNextSlide();
 
     if (currentImage === 4) {
@@ -127,7 +99,7 @@ const Carousel = (props) => {
   const moveToPrevSlide = (e) => {
     if (currentImage >= 1) {
       carouselRef.current.style.transform = `translate(${(currentPosition +=
-        width)}${unit}, 0)`;
+        widthRef.current)}${unitRef.current}, 0)`;
 
       tabsRef.current.childNodes.forEach((tab) =>
         tab.classList.remove("illuminate-tab")
@@ -141,7 +113,7 @@ const Carousel = (props) => {
   const moveToNextSlide = (e) => {
     if (currentImage < imageCount) {
       carouselRef.current.style.transform = `translate(${(currentPosition -=
-        width)}${unit}, 0)`;
+        widthRef.current)}${unitRef.current}, 0)`;
 
       tabsRef.current.childNodes.forEach((tab) =>
         tab.classList.remove("illuminate-tab")
@@ -157,7 +129,7 @@ const Carousel = (props) => {
     tabsRef.current.childNodes[0].classList.add("illuminate-tab");
 
     const autoplayInterval = setTimeout(() => {
-      setInterval(() => autoplaySlides(autoplayRef.current), 7000);
+      setInterval(() => autoplaySlides(), 7000);
     }, 5000);
 
     return () => {
@@ -170,7 +142,12 @@ const Carousel = (props) => {
     autoplayRef.current = autoplay;
   }, [autoplay]);
 
-  useEffect(() => resetSlides(), [width]);
+  useEffect(() => {
+    resetSlides();
+
+    widthRef.current = width;
+    unitRef.current = unit;
+  }, [width, unit]);
 
   const mediaIconStyle = {
     fill: "white",
