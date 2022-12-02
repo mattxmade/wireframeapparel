@@ -73,6 +73,15 @@ header {
       width: 6.5rem;
     }
   }
+
+  @include mq(mobile) {
+    position: relative;
+    z-index: 50;
+  }
+
+  @include mq(tiny) {
+    z-index: initial;
+  }
 }
 
 /*=====================
@@ -96,6 +105,15 @@ header {
 ==================*/
 .header__item--cart {
   justify-content: flex-end;
+
+  @include mq(mobile) {
+    position: relative;
+    z-index: 50;
+  }
+
+  @include mq(tiny) {
+    z-index: initial;
+  }
 }
 
 /*==================
@@ -121,7 +139,7 @@ header {
     transform: translate(100%, 0);
   }
 
-  @media (max-width: 500px) {
+  @include mq(mobile) {
     width: 100%;
     align-items: flex-end;
   }
