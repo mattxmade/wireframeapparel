@@ -75,7 +75,7 @@ const Header = (props) => {
               <i
                 style={{
                   width: "3rem",
-                  height: "auto",
+                  height: "3rem",
                   fill: "white",
                   padding: "0.5rem",
                   background:
