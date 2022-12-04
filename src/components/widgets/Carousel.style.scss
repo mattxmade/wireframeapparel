@@ -33,22 +33,17 @@
   overflow: hidden;
   align-items: center;
   justify-content: center;
-
-  // margin-top: 3.5vh;
-  // margin-right: 2rem;
   position: relative;
 
   width: max-content;
   height: max-content;
 
   border: 1rem double aliceblue; //white;
-  //border-left: none;
   filter: drop-shadow(0 0.5rem 0.5rem darkslategrey);
   clip-path: polygon(0 50%, 100% 50%, 100% 50%, 0 50%); // <-- jsx
 
   @include mq(tablet) {
     margin-right: 0;
-    // border-left: 0.1rem double white;
   }
 }
 
@@ -91,7 +86,6 @@
   justify-content: space-between;
 
   @include mq(small) {
-    //justify-content: space-around;
     justify-content: center;
     gap: 80vw;
   }
@@ -170,8 +164,6 @@
   width: 50%;
   height: 0.5rem;
   position: absolute;
-
-  //bottom: -3rem;
   bottom: 3rem;
 
   display: flex;
