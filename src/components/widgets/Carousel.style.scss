@@ -5,8 +5,13 @@
   Carousel CSS Variables
 ==========================*/
 :root {
-  --carousel-width: 75vw;
-  --carousel-left: 150vw;
+  --carousel-width: 75vw; // 75
+  --carousel-left: 150vw; // 150
+
+  @media (max-height: 900px) {
+    --carousel-width: 56vw; // 75
+    --carousel-left: 112vw; // 150
+  }
 
   @include mq(tablet) {
     --carousel-width: 100vw;
@@ -14,8 +19,8 @@
   }
 
   @include mq(small) {
-    --carousel-width: 150vw;
-    --carousel-left: 300vw;
+    --carousel-width: 75vh; // 150vw;
+    --carousel-left: 150vh; // 300vw;
   }
 }
 
@@ -36,14 +41,30 @@
   width: max-content;
   height: max-content;
 
-  border: 0.1rem double white;
-  border-left: none;
+  border: 1rem double aliceblue; //white;
+  //border-left: none;
   filter: drop-shadow(0 0.5rem 0.5rem darkslategrey);
   clip-path: polygon(0 50%, 100% 50%, 100% 50%, 0 50%); // <-- jsx
 
   @include mq(tablet) {
     margin-right: 0;
-    border-left: 0.1rem double white;
+    // border-left: 0.1rem double white;
+  }
+}
+
+.autoplay-controls {
+  width: 4rem;
+  height: 4rem;
+  top: 1rem;
+  right: 1rem;
+  position: absolute;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @include mq(small) {
+    right: 15%;
   }
 }
 
@@ -61,7 +82,7 @@
 .carousel__navigators {
   z-index: 51;
   width: 100%;
-  height: 100%;
+  height: 25%;
   position: absolute;
   fill: lightgrey;
 
@@ -69,8 +90,10 @@
   align-items: center;
   justify-content: space-between;
 
-  @include mq(tablet) {
-    justify-content: space-around;
+  @include mq(small) {
+    //justify-content: space-around;
+    justify-content: center;
+    gap: 80vw;
   }
 }
 
@@ -102,6 +125,9 @@
   width: var(--carousel-width);
   height: calc(var(--carousel-width) / 2);
 
+  // max-width: 1920px;
+  // max-height: 1280px;
+
   display: flex;
   position: relative;
   transition: 0.8s;
@@ -120,6 +146,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
+
+  // max-width: 1920px;
+  // max-height: 1280px;
 }
 
 /*====================
@@ -142,7 +171,8 @@
   height: 0.5rem;
   position: absolute;
 
-  bottom: -3rem;
+  //bottom: -3rem;
+  bottom: 3rem;
 
   display: flex;
   justify-content: space-between;
