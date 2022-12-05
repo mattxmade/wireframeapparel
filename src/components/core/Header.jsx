@@ -88,14 +88,14 @@ const Header = (props) => {
           </li>
         )}
 
-        <li
-          className="header__item header__item--branding outline "
-          onClick={() => navigate("/")}
-        >
-          <h1 className="outline">
-            Wireframe <span className="outline">Apparel</span>
-          </h1>
-          <img className="outline" src={logo} alt="wireframe apparel logo" />
+        <li onClick={() => navigate("/")}>
+          <button className="header__item header__item--branding icon--select">
+            <span className="sr-only">Home</span>
+            <h1 className="outline">
+              Wireframe <span className="outline">Apparel</span>
+            </h1>
+            <img className="outline" src={logo} alt="wireframe apparel logo" />
+          </button>
         </li>
 
         {!renderMobileHeader && (
