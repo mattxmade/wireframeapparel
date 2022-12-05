@@ -34,11 +34,11 @@ const NavBar = ({ paths, openNavBar }) => {
 
   return (
     <nav>
-      <ul>
+      <ul id="primary-navigation">
         {paths.map((path, index) => {
           return (
             <li key={index}>
-              <NavLink to={path}>
+              <NavLink className="nav-link--select" to={path}>
                 {path === "/" ? "Home" : processPath(path)}
               </NavLink>
             </li>
