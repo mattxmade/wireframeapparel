@@ -1,13 +1,8 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 
-import bag from "../../assets/carousel/wf_bag.webp";
-import sign from "../../assets/carousel/wf_sign.webp";
-import shop from "../../assets/carousel/wf_shop.webp";
-import shoe from "../../assets/carousel/wf_shoe.webp";
-import tees from "../../assets/carousel/wf_tees.webp";
-
-import AwesomeSvg from "../svg-icons/Awesome.module";
 import "./Carousel.style.scss";
+import AwesomeSvg from "../svg-icons/Awesome.module";
+import AssetsFromDirectory from "../../assets/AssetsFromDirectory";
 
 const Chevron = (() => {
   const left = ({ className }) => (
@@ -56,7 +51,7 @@ const Carousel = (props) => {
   const unitRef = useRef();
   const widthRef = useRef();
 
-  const images = [sign, shop, bag, shoe, tees];
+  const images = AssetsFromDirectory("carousel");
 
   let currentImage = 0;
   let currentPosition = 0;
@@ -194,7 +189,16 @@ const Carousel = (props) => {
             {images.map((image, index) => {
               return (
                 <li key={index} className="carousel__img">
-                  <img src={image} alt="" />
+                  <img
+                    rel="preload"
+                    fetchpriority="high"
+                    as="image"
+                    src={image.uri}
+                    alt={`Carousel image slide: picture of Wireframe Apparel ${image.name.slice(
+                      3
+                    )}`}
+                    type="image/webp"
+                  />
                 </li>
               );
             })}
