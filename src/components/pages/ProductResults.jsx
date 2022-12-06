@@ -25,6 +25,13 @@ const ProductResults = (props) => {
   return (
     <Fragment>
       <main className={`main--${view.type}`}>
+        <Aside
+          view={view.type}
+          category={props.productCategory}
+          updateProductType={view.handleCategory}
+          handleProductFilter={view.handleFilterProducts}
+        />
+
         <div
           ref={filterIconRef}
           className="filter-button"
@@ -37,19 +44,12 @@ const ProductResults = (props) => {
           </i>
         </div>
 
-        <Aside
-          view={view.type}
-          category={props.productCategory}
-          updateProductType={view.handleCategory}
-          handleProductFilter={view.handleFilterProducts}
-        />
-
         {/* TDOO <AdWidget /> */}
 
         <section className={`section--${view.type}`}>
           <ul>
             <li>
-              <h2>// {capitaliseString(props.productCategory)}</h2>
+              <h3>// {capitaliseString(props.productCategory)}</h3>
             </li>
             <li>
               <Dropdown handleSortProductsBy={view.handleSortProducts}>
