@@ -29,6 +29,7 @@ const ResultCard = ({ item, type, handleProductSelection }) => {
   return (
     <div ref={productRef} className="product-result">
       <Link ref={ref} to={`/shop/${item.id}`}>
+        <span className="sr-only">{`${item.name} ${item.type.kind}`}</span>
         <div
           ref={maskRef}
           className="product-mask"
