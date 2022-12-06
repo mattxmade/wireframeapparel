@@ -87,6 +87,11 @@ button {
   font-family: "Bebas Neue", cursive;
 }
 
+button {
+  border: none;
+  background-color: transparent;
+}
+
 i {
   display: flex;
   align-items: center;
@@ -134,4 +139,31 @@ main {
 
 .outline {
   outline: 0.1rem solid #e5e5e5;
+}
+
+.nav-link--select:focus {
+  color: aliceblue;
+  background-color: darkslategrey;
+}
+
+.icon--select {
+  border: 0.3rem solid transparent;
+  border-width: 0 0.3rem 0.3rem 0;
+}
+.icon--select:focus {
+  border: 0.3rem solid darkslategrey;
+  border-width: 0 0.3rem 0.3rem 0;
+}
+
+/*===============
+  Screenreaders | https://youtu.be/YAqRQoN8ykI?t=456
+=================*/
+.sr-only {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 0.1rem;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 0.1rem;
 }
