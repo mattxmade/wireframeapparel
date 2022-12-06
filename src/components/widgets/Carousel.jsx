@@ -72,6 +72,8 @@ const Carousel = (props) => {
   };
 
   const resetSlides = () => {
+    if (!carouselRef.current) return;
+
     carouselRef.current.style.transform = "translate(0,0)";
 
     tabsRef.current.childNodes.forEach((tab) =>
@@ -169,21 +171,26 @@ const Carousel = (props) => {
         <div className="carousel-viewer">
           <div className="carousel-border"></div>
           <div className="carousel__navigators">
-            <i
-              className="fas fa-chevron-left  chevron"
-              onClick={moveToPrevSlide}
-            >
-              <ChevronLeft />
-            </i>
-            <i
-              className="fas fa-chevron-right chevron"
+            <button className="icon--select" onClick={moveToPrevSlide}>
+              <span className="sr-only">previous slide</span>
+              <i className="fas fa-chevron-left  chevron">
+                <ChevronLeft />
+              </i>
+            </button>
+
+            <button
+              aria-controls="carousel"
+              className="icon--select"
               onClick={moveToNextSlide}
             >
-              <ChevronRight />
-            </i>
+              <span className="sr-only">next slide</span>
+              <i className="fas fa-chevron-right chevron">
+                <ChevronRight />
+              </i>
+            </button>
           </div>
 
-          <ul ref={carouselRef} className="carousel">
+          <ul id="carousel" ref={carouselRef} className="carousel">
             {images.map((image, index) => {
               return (
                 <li key={index} className="carousel__img">
@@ -205,13 +212,27 @@ const Carousel = (props) => {
 
           <div className="autoplay-controls">
             {!autoplay ? (
-              <i style={mediaIconStyle} onClick={() => setAutoplay(true)}>
-                <PlayIcon />
-              </i>
+              <button
+                aria-controls="play"
+                className="icon--select"
+                onClick={() => setAutoplay(true)}
+              >
+                <span className="sr-only">play</span>
+                <i style={mediaIconStyle}>
+                  <PlayIcon />
+                </i>
+              </button>
             ) : (
-              <i style={mediaIconStyle} onClick={() => setAutoplay(false)}>
-                <PauseIcon />
-              </i>
+              <button
+                aria-controls="carousel"
+                className="icon--select"
+                onClick={() => setAutoplay(false)}
+              >
+                <span className="sr-only">pause</span>
+                <i style={mediaIconStyle}>
+                  <PauseIcon />
+                </i>
+              </button>
             )}
           </div>
         </div>
