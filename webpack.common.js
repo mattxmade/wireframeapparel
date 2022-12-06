@@ -9,7 +9,8 @@ module.exports = {
     new HtmlWebpackPlugin({
       inject: true,
       minify: true,
-      title: "Shopping Cart",
+      favicon: "./src/favicon.ico",
+      title: "Wireframe Apparel",
       template: "./src/index.html",
     }),
     new CopyPlugin({
