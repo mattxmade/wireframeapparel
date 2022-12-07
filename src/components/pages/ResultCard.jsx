@@ -23,6 +23,7 @@ const ResultCard = ({ item, type, handleProductSelection }) => {
     // cleanup remove ??
 
     maskRef.current.classList.add("reveal-item");
+    setTimeout(() => maskRef.current.remove(), 300);
     productRef.current.classList.add("clip-container-path");
   }, []);
 
@@ -36,6 +37,16 @@ const ResultCard = ({ item, type, handleProductSelection }) => {
           onClick={() => {
             const selectedItem = item;
             handleProductSelection(selectedItem);
+          }}
+          onKeyDown={(e) => {
+            if (
+              e.code === "Space " ||
+              e.code === "Enter" ||
+              e.code === "Return"
+            ) {
+              const selectedItem = item;
+              handleProductSelection(selectedItem);
+            }
           }}
         />
       </Link>
