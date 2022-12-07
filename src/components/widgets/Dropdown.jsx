@@ -1,22 +1,32 @@
 import PropTypes from "prop-types";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import "./Dropdown.style.scss";
 import AwesomeSvg from "../svg-icons/Awesome.module";
 import LocalStorage from "../../data/LocalStorage.module";
 
 const Dropdown = ({ children, handleSortProductsBy }) => {
+  const dropdownRef = useRef();
   const restoreSelection = LocalStorage.get("sort");
 
   useEffect(() => {
+    window.addEventListener("click", closeDropdown);
+
     if (restoreSelection) {
       setSelection(restoreSelection);
       setTimeout(() => handleSortProductsBy(restoreSelection), 0);
     }
+
+    return () => window.removeEventListener("click", closeDropdown);
   }, []);
 
+  const toggleRef = useRef();
   const [toggleDropdown, setToggleDropdown] = useState(false);
   const [selection, setSelection] = useState(children[0]);
+
+  const closeDropdown = () => {
+    if (toggleRef.current) setToggleDropdown(false);
+  };
 
   const sortOptions = children;
   const CaretDown = AwesomeSvg.CaretDownIcon;
@@ -40,26 +50,33 @@ const Dropdown = ({ children, handleSortProductsBy }) => {
   };
 
   const handleSortOption = (string) => {
+    dropdownRef.current.focus();
     if (string === selection) return setToggleDropdown(false);
 
     setSelection(string);
     setToggleDropdown(false);
-
     handleSortProductsBy(string.toLowerCase());
   };
 
+  useEffect(() => {
+    toggleRef.current = toggleDropdown;
+    dropdownRef.current.setAttribute("aria-expanded", toggleDropdown);
+  }, [toggleDropdown]);
+
   return (
     <ul
+      tabIndex={-1}
+      ref={dropdownRef}
       style={dropdownStyle.dropdown}
       className="dropdown"
-      data-state={toggleDropdown}
+      aria-label="Sort products dropdown menu"
     >
       <li
         style={dropdownStyle.option}
         className="dropdown-selected"
-        onClick={() => setToggleDropdown(!toggleDropdown)}
+        onClick={() => setTimeout(() => setToggleDropdown(!toggleDropdown), 0)}
       >
-        <p>{selection}</p> <CaretDown parent={"dropdown"} />
+        <button>{selection}</button> <CaretDown parent={"dropdown"} />
       </li>
 
       {toggleDropdown &&
@@ -72,7 +89,7 @@ const Dropdown = ({ children, handleSortProductsBy }) => {
               handleSortOption(e.target.textContent);
             }}
           >
-            <p>{option}</p>
+            <button>{option}</button>
           </li>
         ))}
     </ul>
