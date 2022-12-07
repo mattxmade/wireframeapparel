@@ -65,18 +65,25 @@ const Dropdown = ({ children, handleSortProductsBy }) => {
 
   return (
     <ul
-      tabIndex={-1}
       ref={dropdownRef}
+      tabIndex={-1}
       style={dropdownStyle.dropdown}
       className="dropdown"
-      aria-label="Sort products dropdown menu"
     >
       <li
+        tabIndex={0}
+        role="button"
+        aria-label="Sort products dropdown menu button"
         style={dropdownStyle.option}
         className="dropdown-selected"
         onClick={() => setTimeout(() => setToggleDropdown(!toggleDropdown), 0)}
+        onKeyDown={(e) =>
+          e.code === "Space" || e.code === "Enter" || e.code === "Return"
+            ? setToggleDropdown(!toggleDropdown)
+            : null
+        }
       >
-        <button>{selection}</button> <CaretDown parent={"dropdown"} />
+        {selection} <CaretDown parent={"dropdown"} />
       </li>
 
       {toggleDropdown &&
@@ -88,8 +95,16 @@ const Dropdown = ({ children, handleSortProductsBy }) => {
             onClick={(e) => {
               handleSortOption(e.target.textContent);
             }}
+            onKeyDown={(e) =>
+              e.code === "Space" || e.code === "Enter" || e.code === "Return"
+                ? handleSortOption(e.target.textContent)
+                : null
+            }
+            tabIndex={0}
+            role="button"
+            aria-label={`Sort by: ${option}`}
           >
-            <button>{option}</button>
+            {option}
           </li>
         ))}
     </ul>
