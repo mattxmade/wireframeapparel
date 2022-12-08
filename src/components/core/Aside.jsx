@@ -37,28 +37,38 @@ const ProductFilters = ({
     }
   });
 
+  const handleFilter = (e) => {
+    if (categoryTitle !== active) {
+      setActiveBrand("All");
+
+      const categorySelect = e.target.textContent.toLowerCase();
+
+      if (e.target.textContent === "Reset") {
+        setTimeout(() => updateProductType("All"), 200);
+        handleActiveElement(categorySelect);
+        return;
+      }
+
+      setTimeout(() => updateProductType(categorySelect), 200);
+      handleActiveElement(e.target.textContent.toLowerCase());
+      handleProductFilter(categoryTitle, "All");
+    }
+  };
+
   return (
     <ul ref={listRef} className="category">
       <li className="category-stem" />
       <li
         className="category-title"
-        onClick={(e) => {
-          if (categoryTitle !== active) {
-            setActiveBrand("All");
-
-            const categorySelect = e.target.textContent.toLowerCase();
-
-            if (e.target.textContent === "Reset") {
-              setTimeout(() => updateProductType("All"), 200);
-              handleActiveElement(categorySelect);
-              return;
-            }
-
-            setTimeout(() => updateProductType(categorySelect), 200);
-            handleActiveElement(e.target.textContent.toLowerCase());
-            handleProductFilter(categoryTitle, "All");
-          }
-        }}
+        onKeyDown={(e) =>
+          e.code === "Space" || e.code === "Enter" || e.code === "NumpadEnter"
+            ? handleFilter(e)
+            : null
+        }
+        onClick={(e) => handleFilter(e)}
+        tabIndex={0}
+        role="button"
+        aria-label={`Filter by category: ${categoryTitle}`}
       >
         {title}
       </li>
@@ -74,6 +84,11 @@ const ProductFilters = ({
 
               handleProductFilter(categoryTitle, e.target.textContent);
             }}
+            tabIndex={0}
+            role="button"
+            aria-label={`Filter ${categoryTitle} by brand: ${
+              Object.values(filters)[index]
+            }`}
           >
             <div className="subcategory-branch" />
             <span>{Object.values(filters)[index]}</span>
