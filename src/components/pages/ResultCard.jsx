@@ -23,13 +23,22 @@ const ResultCard = ({ item, type, handleProductSelection }) => {
     // cleanup remove ??
 
     maskRef.current.classList.add("reveal-item");
-    setTimeout(() => maskRef.current.remove(), 300);
     productRef.current.classList.add("clip-container-path");
   }, []);
 
   return (
     <div ref={productRef} className="product-result">
-      <Link ref={ref} to={`/shop/${item.id}`}>
+      <Link
+        ref={ref}
+        to={`/shop/${item.id}`}
+        onKeyDown={(e) => {
+          console.log(e.code);
+          if (e.code === "NumpadEnter" || e.code === "Enter") {
+            const selectedItem = item;
+            handleProductSelection(selectedItem);
+          }
+        }}
+      >
         <span className="sr-only">{`${item.name} ${item.type.kind}`}</span>
         <div
           ref={maskRef}
@@ -37,16 +46,6 @@ const ResultCard = ({ item, type, handleProductSelection }) => {
           onClick={() => {
             const selectedItem = item;
             handleProductSelection(selectedItem);
-          }}
-          onKeyDown={(e) => {
-            if (
-              e.code === "Space " ||
-              e.code === "Enter" ||
-              e.code === "Return"
-            ) {
-              const selectedItem = item;
-              handleProductSelection(selectedItem);
-            }
           }}
         />
       </Link>
