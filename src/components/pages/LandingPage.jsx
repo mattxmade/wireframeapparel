@@ -156,7 +156,9 @@ const LandingPage = (props) => {
       <div id="mask" />
 
       <main className="main--landing">
-        <div
+        <Carousel />
+
+        <button
           style={{ cursor: cursor }}
           className="landing__call-to-action"
           onClick={() => navigate("/shop")}
@@ -167,9 +169,7 @@ const LandingPage = (props) => {
           >
             {actionText}
           </h2>
-        </div>
-
-        <Carousel />
+        </button>
 
         <div className="grid-container">
           <div
