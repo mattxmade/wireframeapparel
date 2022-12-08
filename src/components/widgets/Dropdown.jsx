@@ -78,7 +78,7 @@ const Dropdown = ({ children, handleSortProductsBy }) => {
         className="dropdown-selected"
         onClick={() => setTimeout(() => setToggleDropdown(!toggleDropdown), 0)}
         onKeyDown={(e) =>
-          e.code === "Space" || e.code === "Enter" || e.code === "Return"
+          e.code === "Space" || e.code === "Enter" || e.code === "NumpadEnter"
             ? setToggleDropdown(!toggleDropdown)
             : null
         }
@@ -86,7 +86,7 @@ const Dropdown = ({ children, handleSortProductsBy }) => {
         {selection} <CaretDown parent={"dropdown"} />
       </li>
 
-      {toggleDropdown &&
+      {toggleDropdown ? (
         sortOptions.map((option, index) => (
           <li
             key={index}
@@ -106,7 +106,10 @@ const Dropdown = ({ children, handleSortProductsBy }) => {
           >
             {option}
           </li>
-        ))}
+        ))
+      ) : (
+        <li style={{ width: 0, height: 0 }}></li>
+      )}
     </ul>
   );
 };
