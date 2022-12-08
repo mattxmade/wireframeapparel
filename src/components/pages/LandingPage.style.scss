@@ -5,6 +5,7 @@
   Main: LandingPage
  ===================*/
 .main--landing {
+  gap: 2rem;
   padding: 0;
   display: flex;
   align-items: baseline;
@@ -17,7 +18,7 @@
   justify-content: space-between;
 
   align-items: center;
-  flex-direction: column-reverse;
+  flex-direction: column;
 
   p {
     z-index: 1;
@@ -51,22 +52,25 @@
 .landing__call-to-action {
   z-index: 10;
   position: relative;
-  height: 15vh;
   display: grid;
   align-items: center;
   justify-content: center;
+  margin-bottom: 7vh;
 
-  @include mq(small) {
+  @include mq(tablet) {
     margin-bottom: 10vh;
   }
 }
+.landing__call-to-action:focus {
+  background-color: black;
+}
 
 .h2-call-to-action {
-  padding: 3rem;
+  padding: 2rem;
   font-size: 2.4rem;
   background-color: aliceblue;
   transform: translate(0, -30vh);
-  clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%, 0 30%);
+  clip-path: polygon(2rem 0, 100% 0, 100% 100%, 0 100%, 0 4rem);
   // border-right: 0.5rem solid grey;
   transition: 0.3s;
 }
@@ -74,7 +78,6 @@
 .h2-call-to-action:hover {
   color: aliceblue;
   background-color: black;
-  // border-right: 0.5rem solid aliceblue;
 }
 
 /*============
