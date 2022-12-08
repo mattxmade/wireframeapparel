@@ -4,6 +4,8 @@ import "../pages/CartPage.style.scss";
 import CommerceUtils from "../../utility/CommerceUtils.module";
 
 const CheckoutForm = (() => {
+  const { fixPrice } = CommerceUtils;
+
   const CustomerDetailsForm = (props) => {
     // form inputs
     const [firstName, setFirstName] = useState("");
@@ -15,17 +17,12 @@ const CheckoutForm = (() => {
     const [city, setCity] = useState("");
     const [postcode, setPostcode] = useState("");
 
-    const { fixPrice } = CommerceUtils;
-
     return (
       <form
-        id="form--checkout"
+        id={props.id}
         action=""
         method="get"
-        onSubmit={(e) => {
-          e.preventDefault();
-          //checkoutModalRef.current.showModal();
-        }}
+        onSubmit={(e) => e.preventDefault()}
       >
         <ul>
           <li>
@@ -104,7 +101,7 @@ const CheckoutForm = (() => {
               <label htmlFor="city">
                 city
                 <input
-                  name="address-2"
+                  name="city"
                   type="text"
                   required
                   placeholder="London"
@@ -114,7 +111,7 @@ const CheckoutForm = (() => {
               <label htmlFor="postcode">
                 postcode
                 <input
-                  name="address-2"
+                  name="postcode"
                   type="text"
                   required
                   placeholder="NW1 6XE"
@@ -157,29 +154,43 @@ const CheckoutForm = (() => {
     );
   };
 
-  const PaymentForm = (props) => (
-    <ul>
-      <li>
-        <h3>Payment</h3>
-        <div className="confirm-input">
-          <label className="checkout-select-payment" htmlFor="type">
-            type
-            <select name="type" id="payment-type" placeholder="payment method">
-              {props.paymentOptions.map((option, index) => (
-                <option key={index}>{option}</option>
-              ))}
-            </select>
-          </label>
-          <label htmlFor="promo">
-            promocode <input name="promo" type="text" />
-          </label>
-        </div>
-      </li>
-      <li>
-        <h3>Delivery Charge: £3.50</h3>
-      </li>
-    </ul>
-  );
+  const PaymentForm = (props) => {
+    const [paymentType, setPaymentType] = useState("");
+
+    const handlePaymentType = (e) => {
+      if (e.target.value === "Select Payment") return;
+    };
+    return (
+      <ul>
+        <li>
+          <h3>Payment</h3>
+          <div className="confirm-input">
+            <label className="checkout-select-payment" htmlFor="type">
+              type
+              <select
+                required
+                name="type"
+                id="payment-type"
+                form="form--checkout"
+                placeholder="payment method"
+                onChange={handlePaymentType}
+              >
+                {props.paymentOptions.map((option, index) => (
+                  <option key={index}>{option}</option>
+                ))}
+              </select>
+            </label>
+            <label htmlFor="promo">
+              promocode <input name="promo" type="text" />
+            </label>
+          </div>
+        </li>
+        <li>
+          <h3>Delivery Charge: £3.50</h3>
+        </li>
+      </ul>
+    );
+  };
 
   return { CustomerDetailsForm, PaymentForm };
 })();
