@@ -1,8 +1,10 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import "./CartPage.style.scss";
+import Modal from "../core/Modal";
+import Dropdown from "../widgets/Dropdown";
 import AwesomeSvg from "../svg-icons/Awesome.module.jsx";
 import PaymentSvg from "../svg-icons/Payment.module.jsx";
 import capitaliseString from "../../utility/capitaliseString";
@@ -42,7 +44,11 @@ const CartItem = (props) => {
         <ul className="cart-item__options">
           <li className="cart-item__attributes">
             <p>{item.size}</p>
-            <p>{item.color === "#202020" ? "black" : item.color}</p>
+            <p>
+              {capitaliseString(
+                item.color === "#202020" ? "Black" : item.color
+              )}
+            </p>
           </li>
 
           <li className="cart-item__edit">
@@ -86,6 +92,25 @@ CartItem.propTypes = {
 };
 
 const CartPage = (props) => {
+  const formRefA = useRef();
+  const formRefB = useRef();
+
+  const submitBtnA = useRef();
+  const submitBtnB = useRef();
+
+  const checkoutModalRef = useRef();
+  const formSubmissionRef = useRef();
+
+  // form
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [telephone, setTelephone] = useState("");
+  const [address, setAddress] = useState("");
+  const [street, setStreet] = useState("");
+  const [city, setCity] = useState("");
+  const [postcode, setPostcode] = useState("");
+
   const [customerCart, setCustomerCart] = useState(
     LocalStorage.get("cart-items") ?? [...props.itemsInCart]
   );
@@ -96,13 +121,25 @@ const CartPage = (props) => {
   const location = useLocation();
   useEffect(() => () => props.handleLastPath(location.pathname), []);
 
-  const { GlobeIcon } = AwesomeSvg;
+  const { GlobeIcon, GemIcon } = AwesomeSvg;
   const { AmazonPayLogo, ApplePayLogo, DigitalPayLogos } = PaymentSvg;
   const { GooglePayLogo, PayPalLogo, VisaLogo } = PaymentSvg;
+
+  const paymentOptions = [
+    "Select Payment",
+    "PayPal",
+    "Apple Pay",
+    "Amazon Pay",
+    "Google Pay",
+    "Debit Card",
+    "Credit Card",
+  ];
 
   useEffect(() => {
     const body = document.querySelector("body");
     body.style.overflowY = "scroll";
+
+    checkoutModalRef.current = document.querySelector(".modal--checkout");
 
     return () => {
       body.style.overflowY = "hidden";
@@ -116,10 +153,6 @@ const CartPage = (props) => {
     const itemToUpdate = customerCart.find(
       (item) => item.variant === itemVariantID
     );
-
-    // for (const [key, value] of Object.entries(itemToUpdate)) {
-    //   console.log(`${key}: ${value}`);
-    // }
 
     action === "increment"
       ? (itemToUpdate.quantity += 1)
@@ -174,26 +207,203 @@ const CartPage = (props) => {
     props.handleCartCount(updatedOrder);
   }, [customerCart]);
 
+  const handleFormSubmission = () => {
+    if (numberOfItemsInCart === 0) return;
+
+    formSubmissionRef.current = [];
+
+    formSubmissionRef.current = [
+      firstName,
+      lastName,
+      email,
+      telephone,
+      address,
+      street,
+      city,
+      postcode,
+    ].filter((userInfo) => userInfo === "");
+
+    return formSubmissionRef.current.length
+      ? [formRefA, formRefB].forEach((ref) =>
+          ref.current.classList.add("animate--checkout-form__translate-x")
+        )
+      : checkoutModalRef.current.showModal();
+  };
+
   return (
     <main className="cart-page">
-      <h2 className="cart-page__heading">
-        <span>
-          {numberOfItemsInCart} {numberOfItemsInCart === 1 ? "item" : "items"}{" "}
-          in your cart
-        </span>
-      </h2>
+      <div className="cart-page__navbar">
+        <h2 className="cart-page__heading">
+          <span>
+            {numberOfItemsInCart}{" "}
+            {numberOfItemsInCart === 1 ? "item " : "items "}
+            in your cart
+          </span>
+        </h2>
+        <div
+          className="call-confirmation-view"
+          onClick={() => {
+            [formRefA, formRefB].map((ref) => {
+              if (
+                ref.current.classList.contains(
+                  "animate--checkout-form__translate-x"
+                )
+              )
+                return ref.current.classList.remove(
+                  "animate--checkout-form__translate-x"
+                );
+              ref.current.classList.add("animate--checkout-form__translate-x");
+            });
+          }}
+        >
+          <i style={{ width: "2rem", height: "2rem" }}>
+            <GlobeIcon />
+          </i>
+          <h3>Order details</h3>
+        </div>
+      </div>
 
       <div className="cart-page__content">
         <div className="cart-items">
+          <div ref={formRefA} className="confirm-order--details">
+            <form
+              id="form--checkout"
+              action=""
+              method="get"
+              onSubmit={(e) => {
+                e.preventDefault();
+                checkoutModalRef.current.showModal();
+              }}
+            >
+              <ul>
+                <li>
+                  <h3>Details</h3>
+                  <div className="confirm-input">
+                    <label htmlFor="first">
+                      first
+                      <input
+                        name="first"
+                        type="text"
+                        required
+                        placeholder="first name"
+                        onChange={(e) => setFirstName(e.target.value)}
+                      />
+                    </label>
+                    <label htmlFor="last">
+                      last
+                      <input
+                        name="last"
+                        type="text"
+                        required
+                        placeholder="last name"
+                        onChange={(e) => setLastName(e.target.value)}
+                      />
+                    </label>
+                  </div>
+
+                  <div className="confirm-input">
+                    <label htmlFor="email">
+                      email
+                      <input
+                        className="confirm-email"
+                        name="email"
+                        type="email"
+                        required
+                        placeholder="holmes@gmail.com"
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
+                    </label>
+                    <label htmlFor="telephone">
+                      telephone
+                      <input
+                        className="confirm-telephone"
+                        name="telephone"
+                        type="telephone"
+                        required
+                        placeholder="Contact number"
+                        onChange={(e) => setTelephone(e.target.value)}
+                      />
+                    </label>
+                  </div>
+
+                  <h3>Shipping Address</h3>
+                  <div className="confirm-input">
+                    <label htmlFor="address-1">
+                      address 1
+                      <input
+                        name="address-1"
+                        type="text"
+                        required
+                        placeholder="221B"
+                        onChange={(e) => setAddress(e.target.value)}
+                      />
+                    </label>
+
+                    <label htmlFor="address-2">
+                      address 2
+                      <input
+                        name="address-2"
+                        type="text"
+                        required
+                        placeholder="Baker Street"
+                        onChange={(e) => setStreet(e.target.value)}
+                      />
+                    </label>
+                    <label htmlFor="city">
+                      city
+                      <input
+                        name="address-2"
+                        type="text"
+                        required
+                        placeholder="London"
+                        onChange={(e) => setCity(e.target.value)}
+                      />
+                    </label>
+                    <label htmlFor="postcode">
+                      postcode
+                      <input
+                        name="address-2"
+                        type="text"
+                        required
+                        placeholder="NW1 6XE"
+                        onChange={(e) => setPostcode(e.target.value)}
+                      />
+                    </label>
+                  </div>
+                </li>
+
+                <li>
+                  <h3>{`Order Total: £${fixPrice(cartOrderTotal + 3.5)}`}</h3>
+                  <p>{`Items: ${numberOfItemsInCart}`}</p>
+                  <p>Delivery: £3.50</p>
+                  <div className="confirm-input">
+                    <button
+                      ref={submitBtnA}
+                      type="submit"
+                      className="checkout-button action-button"
+                      onClick={handleFormSubmission}
+                    >
+                      Confirm & Pay
+                      {numberOfItemsInCart === 0 ? (
+                        <div className="button--inactive" />
+                      ) : null}
+                    </button>
+                  </div>
+                </li>
+              </ul>
+            </form>
+          </div>
+
           {!customerCart.length ? (
             <div
               style={{
                 width: "100%",
+                height: "100%",
                 gap: "1rem",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                height: "-webkit-fill-available",
+
                 position: "absolute",
                 top: 0,
                 left: 0,
@@ -202,6 +412,7 @@ const CartPage = (props) => {
             >
               <i
                 style={{
+                  cursor: "auto",
                   fill: "darkslategrey",
                   width: "2rem",
                   height: "auto",
@@ -239,6 +450,34 @@ const CartPage = (props) => {
         </div>
 
         <div className="cart-checkout">
+          <div ref={formRefB} className="confirm-order--options">
+            <ul>
+              <li>
+                <h3>Payment</h3>
+                <div className="confirm-input">
+                  <label className="checkout-select-payment" htmlFor="type">
+                    type
+                    <select
+                      name="type"
+                      id="payment-type"
+                      placeholder="payment method"
+                    >
+                      {paymentOptions.map((option, index) => (
+                        <option key={index}>{option}</option>
+                      ))}
+                    </select>
+                  </label>
+                  <label htmlFor="promo">
+                    promocode <input name="promo" type="text" />
+                  </label>
+                </div>
+              </li>
+              <li>
+                <h3>Delivery Charge: £3.50</h3>
+              </li>
+            </ul>
+          </div>
+
           <h3>Guest checkout</h3>
 
           <ul className="payment-list">
@@ -282,13 +521,28 @@ const CartPage = (props) => {
           </ul>
 
           <button
+            ref={submitBtnB}
+            form="form--checkout"
             className="checkout-button action-button"
-            // TODO onClick={() => handleProductOrder(product, quantity)}
+            onClick={(e) => {
+              e.preventDefault();
+              handleFormSubmission();
+            }}
           >
             Checkout
+            {numberOfItemsInCart === 0 ? (
+              <div className="button--inactive" />
+            ) : null}
           </button>
         </div>
       </div>
+
+      <Modal
+        className="modal--checkout"
+        logo={<GlobeIcon />}
+        title="Order successfull!"
+        heading="Thank you for shopping with Wireframe Apparel."
+      />
     </main>
   );
 };
