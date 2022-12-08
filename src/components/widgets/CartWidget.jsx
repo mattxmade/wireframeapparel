@@ -10,11 +10,10 @@ const CartWidget = ({ currentOrderTotal }) => {
 
   return (
     <button
-      aria-controls="primary-navigation"
+      aria-label={`Items in cart: ${currentOrderTotal}`}
       className="cart-widget-button icon--select"
       onClick={() => navigate("/checkout")}
     >
-      <span className="sr-only">Menu</span>
       <p className="cart-widget__counter">{currentOrderTotal}</p>
       <CartIcon type="sharp" className="cart-widget__icon icon" />
     </button>
