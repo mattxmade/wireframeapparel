@@ -12,15 +12,18 @@ let open = false;
 
 const showModal = () => {
   open = !open;
-  const modal = document.querySelector("dialog");
+  const modal = document.querySelector(".modal--footer");
   modal.showModal();
 };
 
 const ExternalLink = (props) =>
   props.link && (
-    <a href={props.link} target="_blank">
-      <i>{props.children}</i>
-    </a>
+    <button>
+      <a tabIndex={-1} href={props.link} target="_blank">
+        <span className="sr-only">{props.screenreader}</span>
+        <i>{props.children}</i>
+      </a>
+    </button>
   );
 
 const Footer = (props) => {
@@ -29,7 +32,10 @@ const Footer = (props) => {
   return location.pathname !== "/" ? null : (
     <Fragment>
       <Modal
+        className="modal--footer"
         title="React Shopping Cart"
+        heading="// Built with:"
+        subheading="// Credits:"
         logo={<GlobeIcon />}
         author="mattxmade"
         year="2022"
@@ -43,28 +49,49 @@ const Footer = (props) => {
         ]}
         icons={[TwitterIcon]}
       >
-        <ExternalLink link="https://github.com/mattxmade/shopping-cart">
+        <ExternalLink
+          link="https://github.com/mattxmade/shopping-cart"
+          screenreader="GitHub"
+        >
           <GitHubIcon />
         </ExternalLink>
 
-        <ExternalLink link="https://twitter.com/mattxmade">
+        <ExternalLink
+          link="https://twitter.com/mattxmade"
+          screenreader="Twitter"
+        >
           <TwitterIcon />
         </ExternalLink>
       </Modal>
 
       <footer>
         <ul>
-          <ExternalLink link="https://github.com/mattxmade/shopping-cart">
-            <GitHubIcon />
-          </ExternalLink>
+          <li>
+            <ExternalLink
+              link="https://github.com/mattxmade/shopping-cart"
+              screenreader="GitHub"
+            >
+              <GitHubIcon />
+            </ExternalLink>
+          </li>
 
-          <ExternalLink link="https://twitter.com/mattxmade">
-            <TwitterIcon />
-          </ExternalLink>
+          <li>
+            <ExternalLink
+              link="https://twitter.com/mattxmade"
+              screenreader="Twitter"
+            >
+              <TwitterIcon />
+            </ExternalLink>
+          </li>
 
-          <i onClick={showModal}>
-            <InfoIcon />
-          </i>
+          <li>
+            <button>
+              <i onClick={showModal} style={{ transform: "rotate(180deg)" }}>
+                <span className="sr-only">Project info modal</span>
+                <InfoIcon />
+              </i>
+            </button>
+          </li>
         </ul>
       </footer>
     </Fragment>
