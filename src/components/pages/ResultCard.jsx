@@ -32,7 +32,6 @@ const ResultCard = ({ item, type, handleProductSelection }) => {
         ref={ref}
         to={`/shop/${item.id}`}
         onKeyDown={(e) => {
-          console.log(e.code);
           if (e.code === "NumpadEnter" || e.code === "Enter") {
             const selectedItem = item;
             handleProductSelection(selectedItem);
