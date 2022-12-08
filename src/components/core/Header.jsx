@@ -18,8 +18,8 @@ const Header = (props) => {
   const MenuIcon = AwesomeSvg.BarsIcon;
 
   const navBarRef = useRef();
-  const [SearchBar, BasketWidget] = Array.from(props.children);
-  // const [SearchBar, Nav, BasketWidget] = Array.from(props.children);
+  const [SearchBar, CartWidget] = Array.from(props.children);
+  // const [SearchBar, Nav, CartWidget] = Array.from(props.children);
 
   const [toggleNavBar, setToggleNavBar] = useState(false);
   const [renderDesktopHeader, setDesktopHeader] = useState(handleDesktopHeader);
@@ -63,7 +63,7 @@ const Header = (props) => {
       <ul className="outline">
         {renderSmallVPHeader && (
           <li
-            className="header__item header__item--cart"
+            className="header__item header__item--widget"
             style={{
               zIndex: 11,
               cursor: "pointer",
@@ -71,7 +71,11 @@ const Header = (props) => {
             }}
             onClick={handleToggleNavBar}
           >
-            {
+            <button
+              aria-controls="primary-navigation"
+              aria-expanded={toggleNavBar}
+            >
+              <span className="sr-only">Navigation Menu Button</span>
               <i
                 style={{
                   width: "3rem",
@@ -84,7 +88,7 @@ const Header = (props) => {
               >
                 <MenuIcon />
               </i>
-            }
+            </button>
           </li>
         )}
 
@@ -106,7 +110,7 @@ const Header = (props) => {
           <NavBar paths={paths} openNavBar={setToggleNavBar} />
         </li>
 
-        <li className="header__item header__item--cart">{BasketWidget}</li>
+        <li className="header__item header__item--widget">{CartWidget}</li>
 
         {renderMobileHeader && (
           <li className="header__item header__item--search">{SearchBar}</li>
