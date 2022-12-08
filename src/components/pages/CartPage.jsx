@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
 
@@ -9,6 +9,7 @@ import depluraliseString from "../../utility/depluraliseString.js";
 
 import "./CartPage.style.scss";
 import Modal from "../core/Modal";
+import CartItem from "./CartItem.jsx";
 import AwesomeSvg from "../svg-icons/Awesome.module.jsx";
 import CheckoutForm from "../widgets/Form";
 import AcceptedPaymentTypes from "../widgets/PaymentList.jsx";
@@ -16,90 +17,16 @@ import AcceptedPaymentTypes from "../widgets/PaymentList.jsx";
 const { fixPrice } = CommerceUtils;
 const { CustomerDetailsForm, PaymentForm } = CheckoutForm;
 
-const CartItem = (props) => {
-  const { item, variantID, handleCartItem } = props;
-
-  const TrashIcon = AwesomeSvg.TrashIcon;
-  const { AngleUpIcon, AngleDownIcon } = AwesomeSvg;
-
-  // TODO: Break up component
-
-  return (
-    <div className="cart-item">
-      <img
-        className="cart-item__thumbnail"
-        src={item.image.src}
-        alt={item.image.alt}
-      />
-
-      <div className="cart-item__overview">
-        <ul className="cart-item__heading">
-          <li className="cart-item__name">
-            {capitaliseString(item.name)} {depluraliseString(item.type)}
-          </li>
-
-          {/* <p>{"£" + fixPrice(item.price * item.quantity)}</p> */}
-          <li className="cart-item__price">
-            {"£" + item.price * item.quantity}
-          </li>
-        </ul>
-
-        <ul className="cart-item__options">
-          <li className="cart-item__attributes">
-            <p>{item.size}</p>
-            <p>
-              {capitaliseString(
-                item.color === "#202020" ? "Black" : item.color
-              )}
-            </p>
-          </li>
-
-          <li className="cart-item__edit">
-            <i onClick={() => handleCartItem(variantID, "remove")}>
-              <TrashIcon className="cart-icon" />
-            </i>
-
-            <div className="cart-item__quantity">
-              <i
-                style={{ cursor: "pointer" }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleCartItem(variantID, "increment");
-                }}
-              >
-                <AngleUpIcon />
-              </i>
-
-              <p>{item.quantity}</p>
-
-              <i
-                style={{ cursor: "pointer" }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleCartItem(variantID, "decrement");
-                }}
-              >
-                <AngleDownIcon />
-              </i>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
-  );
-};
-
-CartItem.propTypes = {
-  itemsInCart: PropTypes.array,
-  handleCartItem: PropTypes.func,
-};
-
 const CartPage = (props) => {
+  const cartItemRef = useRef();
+
   const formRefA = useRef();
   const formRefB = useRef();
+  const formBtnRef = useRef();
 
   const checkoutModalRef = useRef();
   const formSubmissionRef = useRef();
+  formSubmissionRef.current = [];
 
   const [customerCart, setCustomerCart] = useState(
     LocalStorage.get("cart-items") ?? [...props.itemsInCart]
@@ -111,10 +38,9 @@ const CartPage = (props) => {
   const location = useLocation();
   useEffect(() => () => props.handleLastPath(location.pathname), []);
 
-  const { GlobeIcon, GemIcon } = AwesomeSvg;
+  const { GlobeIcon } = AwesomeSvg;
 
   const paymentOptions = [
-    "Select Payment",
     "PayPal",
     "Apple Pay",
     "Amazon Pay",
@@ -199,7 +125,6 @@ const CartPage = (props) => {
     if (numberOfItemsInCart === 0) return;
 
     formSubmissionRef.current = [];
-
     formSubmissionRef.current = [...formInputsArray].filter(
       (userInfo) => userInfo === ""
     );
@@ -209,6 +134,26 @@ const CartPage = (props) => {
           ref.current.classList.add("animate--checkout-form__translate-x")
         )
       : checkoutModalRef.current.showModal();
+  };
+
+  const handleElementVisibility = () => {
+    [formRefA, formRefB].map((ref) => {
+      cartItemRef.current.style.visibility = "visible";
+      formBtnRef.current.setAttribute("aria-expanded", false);
+
+      if (ref.current.classList.contains("animate--checkout-form__translate-x"))
+        return ref.current.classList.remove(
+          "animate--checkout-form__translate-x"
+        );
+
+      ref.current.classList.add("animate--checkout-form__translate-x");
+
+      formBtnRef.current.setAttribute("aria-expanded", true);
+      const input = document.querySelector("input[name=first]");
+
+      setTimeout(() => input.focus(), 800);
+      setTimeout(() => (cartItemRef.current.style.visibility = "hidden"), 600);
+    });
   };
 
   return (
@@ -221,33 +166,24 @@ const CartPage = (props) => {
             in your cart
           </span>
         </h2>
-        <div
-          className="call-confirmation-view"
-          onClick={() => {
-            [formRefA, formRefB].map((ref) => {
-              if (
-                ref.current.classList.contains(
-                  "animate--checkout-form__translate-x"
-                )
-              )
-                return ref.current.classList.remove(
-                  "animate--checkout-form__translate-x"
-                );
-              ref.current.classList.add("animate--checkout-form__translate-x");
-            });
-          }}
+        <button
+          ref={formBtnRef}
+          className="form-visibility-btn"
+          aria-controls="form--checkout"
+          onClick={handleElementVisibility}
         >
           <i style={{ width: "2rem", height: "2rem" }}>
             <GlobeIcon />
           </i>
-          <h3>Order details</h3>
-        </div>
+          <h3>Checkout Form</h3>
+        </button>
       </div>
 
       <div className="cart-page__content">
         <div className="cart-items">
           <div ref={formRefA} className="confirm-order--details">
             <CustomerDetailsForm
+              id="form--checkout"
               cartOrderTotal={cartOrderTotal}
               numberOfItemsInCart={numberOfItemsInCart}
               handleFormSubmission={handleFormSubmission}
@@ -291,12 +227,17 @@ const CartPage = (props) => {
           {customerCart.length
             ? customerCart.map((item, index) => {
                 return item ? (
-                  <CartItem
+                  <div
+                    ref={cartItemRef}
                     key={item.id + index}
-                    item={item}
-                    variantID={item.variant}
-                    handleCartItem={handleCartItem}
-                  />
+                    className="cart-item"
+                  >
+                    <CartItem
+                      item={item}
+                      variantID={item.variant}
+                      handleCartItem={handleCartItem}
+                    />
+                  </div>
                 ) : null;
               })
             : null}
@@ -323,7 +264,9 @@ const CartPage = (props) => {
             className="checkout-button action-button"
             onClick={(e) => {
               e.preventDefault();
-              handleFormSubmission();
+              formSubmissionRef.current.length
+                ? handleFormSubmission(formSubmissionRef.current)
+                : handleElementVisibility();
             }}
           >
             Checkout
