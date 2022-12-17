@@ -19,6 +19,7 @@ import BrowsePage from "./pages/BrowsePage.jsx";
 import ProductPage from "./pages/ProductPage.jsx";
 import NoMatchPage from "./pages/NoMatchPage.jsx";
 import CustomisePage from "./pages/CustomisePage.jsx";
+import EnhancedComponent from "./hoc/EnhanceComponent.module.js";
 
 const App = () => {
   const [productPagePath, setProductPagePath] = useState("");
@@ -29,13 +30,9 @@ const App = () => {
   const [lastPath, setLastPath] = useState();
   const [searchInput, setSearchInput] = useState("");
 
-  const [currentOrderTotal, setCurrentOrderTotal] = useState(
-    LocalStorage.get("cart-total") ?? 0
-  );
   const [customerOrder, setCustomerOrder] = useState(
     LocalStorage.get("cart-items") ?? []
   );
-  // const refCustomerOrder = useRef(customerOrder);
 
   const handleProductSelection = (product) => {
     setProductSelection(product);
@@ -73,23 +70,12 @@ const App = () => {
 
     const currentOrder = handleOrder();
     LocalStorage.set("cart-items", currentOrder);
-
-    handleCartCount(currentOrder);
     setCustomerOrder(currentOrder);
   };
 
   const updateCustomerOrder = (array) => {
-    console.log("App: order update function called; CartPage unmounted");
-
+    console.log("App: order update function called");
     setCustomerOrder(array);
-  };
-
-  const handleCartCount = (array) => {
-    let itemsInCart = 0;
-    array.map((item) => (itemsInCart += item.quantity));
-
-    LocalStorage.set("cart-total", itemsInCart);
-    setCurrentOrderTotal(itemsInCart);
   };
 
   const handleSearchInput = (string) => {
@@ -110,8 +96,14 @@ const App = () => {
     navigate(path);
   };
 
+  // Fallback to last path when search input is cleared
   const handleLastPath = (path) => setLastPath(path);
-  const handleLastSearchPath = (path) => setLastSearchPath(path);
+
+  // Higher-Order Component Abstraction Module
+  const { create, HOC } = EnhancedComponent;
+
+  const CartPageWithCounter = create(CartPage, HOC.withCounter);
+  const CartWidgetWithCounter = create(CartWidget, HOC.withCounter);
 
   return (
     <Fragment>
@@ -121,7 +113,7 @@ const App = () => {
             searchInput={searchInput}
             handleSearchQuery={handleSearchQuery}
           />
-          <CartWidget currentOrderTotal={currentOrderTotal} />
+          <CartWidgetWithCounter customerOrder={customerOrder} />
         </Header>
 
         <Routes>
@@ -149,7 +141,7 @@ const App = () => {
                   product={productSelection}
                   handleProductToCart={handleProductToCart}
                   handleLastPath={handleLastPath}
-                ></ProductPage>
+                />
               }
             />
           )}
@@ -172,16 +164,20 @@ const App = () => {
           <Route
             path="/checkout"
             element={
-              <CartPage
+              <CartPageWithCounter
                 itemsInCart={customerOrder}
-                handleCartCount={handleCartCount}
                 updateCustomerOrder={updateCustomerOrder}
                 handleLastPath={handleLastPath}
               />
             }
           />
 
-          <Route path="*" element={<NoMatchPage />} />
+          <Route
+            path="*"
+            element={
+              <NoMatchPage handleProductSelection={handleProductSelection} />
+            }
+          />
         </Routes>
 
         <Footer />
