@@ -19,7 +19,7 @@ import BrowsePage from "./pages/BrowsePage.jsx";
 import ProductPage from "./pages/ProductPage.jsx";
 import NoMatchPage from "./pages/NoMatchPage.jsx";
 import CustomisePage from "./pages/CustomisePage.jsx";
-import EnhancedComponent from "./hoc/EnhanceComponent.module.js";
+import EnhancedComponent from "./hoc/EnhancedComponent.module.js";
 
 const App = () => {
   const [productPagePath, setProductPagePath] = useState("");
