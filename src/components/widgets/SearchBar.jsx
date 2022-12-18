@@ -4,7 +4,14 @@ import "./SearchBar.style.scss";
 const SearchBar = (props) => {
   const HandleSearchInput = (e) => {
     e.preventDefault();
-    props.handleSearchQuery(e.target.value);
+
+    // modern props.searchInput.replace(/\+/g, " ");
+    // legacy props.searchInput.replaceAll("+", " ");
+
+    const regex = /^[a-z0-9 ]*$/i;
+    regex.test(e.target.value.toLowerCase().slice(-1))
+      ? props.handleSearchQuery(e.target.value.toLowerCase())
+      : 0;
   };
 
   return (
@@ -12,7 +19,7 @@ const SearchBar = (props) => {
       <input
         type="search"
         placeholder="search"
-        value={props.searchInput}
+        value={props.searchInput.replace(/\+/g, " ")}
         onChange={(e) => HandleSearchInput(e)}
       />
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
