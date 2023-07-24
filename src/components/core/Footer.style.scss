@@ -2,16 +2,12 @@
 @use "../../sass/mixins/media-query" as *;
 
 footer {
-  width: fit-content;
-  min-width: 20rem;
-  right: 0rem;
-  bottom: 0.5rem;
-  position: fixed;
+  width: 100%;
   padding: 0.5rem 2rem;
+  background: linear-gradient(180deg, rgba(0, 225, 225, 0.25), gainsboro 70%);
 }
 
 footer ul {
-  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -21,11 +17,15 @@ footer a {
   padding: 0;
 }
 
-footer i {
+footer button {
   cursor: pointer;
   fill: rgb(25, 25, 25);
   width: 2.4rem;
   height: auto;
+}
+
+footer button:focus {
+  outline: 0.4rem solid grey;
 }
 
 footer ul > i {
