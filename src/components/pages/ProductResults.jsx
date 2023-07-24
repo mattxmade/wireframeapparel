@@ -1,12 +1,9 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
-import PropTypes, { array } from "prop-types";
-
-import capitaliseString from "../../utility/capitaliseString";
 
 import Aside from "../core/Aside";
-import AdWidget from "../widgets/AdWidget";
 import Dropdown from "../widgets/Dropdown";
 import AwesomeSvg from "../svg-icons/Awesome.module";
+import capitaliseString from "../../utility/capitaliseString";
 
 import "./ProductResults.style.scss";
 
