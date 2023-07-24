@@ -1,6 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import PropTypes, { array } from "prop-types";
 
 import fetchData from "../../data/fetchData";
 import ProductData from "../../data/product.data";
@@ -19,7 +18,6 @@ const SearchPage = (props) => {
 
   const [cache, setCache] = useState();
   const [searchResults, setSearchResults] = useState();
-  const [productsPerPage, setProductsPerPage] = useState(19);
 
   const sort = useSort();
   const filter = useFilter("search");
@@ -42,14 +40,13 @@ const SearchPage = (props) => {
     handleFilterProducts(productCategory, filter.attribute);
   };
 
-  const handleSortProducts = (sortProductsBy) => {
-    //if (sort.sortBy === sortProductsBy) return;
-    searchResults && mapData(sort.handleSortBy(sortProductsBy, searchResults));
-  };
+  const handleSortProducts = (sortProductsBy, array = searchResults) =>
+    sort.products(sortProductsBy, {
+      array,
+      setState: setSearchResults,
+    });
 
   const handleFilterProducts = (productCategory, filterProductsBy) => {
-    //if (filter.attribute === filterProductsBy) return;
-    //LocalStorage.set("filter", filterProductsBy);
     mapData(filter.handle(productCategory, filterProductsBy, cache));
   };
 
@@ -73,9 +70,9 @@ const SearchPage = (props) => {
 
   useEffect(() => {
     if (cache && cache.length) {
-      const processDataByUserPref = filter.handle(category, "All", cache);
+      const processResultsByUserPref = filter.handle(category, "All", cache);
 
-      mapData(sort.handleSortBy(sort.sortBy, processDataByUserPref));
+      handleSortProducts(sort.sortBy, processResultsByUserPref);
     }
   }, [cache]);
 
@@ -83,8 +80,6 @@ const SearchPage = (props) => {
 
   return (
     <Fragment>
-      {console.count("Search render")}
-
       <ProductResults view={viewProps} productCategory={category}>
         {searchResults?.length > 0 && (
           <div className="product-results">
