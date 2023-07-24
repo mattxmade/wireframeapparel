@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import MaterialSvg from "../svg-icons/Material.module";
@@ -8,16 +8,15 @@ const CartWidget = (props) => {
   const { CartIcon } = MaterialSvg;
   const navigate = useNavigate();
 
-  // withCounter - HOC function handler
-  props.handleCount(props.customerOrder);
+  useEffect(() => props.handleCartCount(props.customerOrder), []);
 
   return (
     <button
-      aria-label={`Items in cart: ${props.count}`}
+      aria-label={`Items in cart: ${props.numberOfItemsInCart}`}
       className="cart-widget-button icon--select"
       onClick={() => navigate("/checkout")}
     >
-      <p className="cart-widget__counter">{props.count}</p>
+      <p className="cart-widget__counter">{props.numberOfItemsInCart}</p>
       <CartIcon type="sharp" className="cart-widget__icon icon" />
     </button>
   );
