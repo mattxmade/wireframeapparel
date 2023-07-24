@@ -1,11 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
-import PropTypes from "prop-types";
-
-import CommerceUtils from "../../utility/CommerceUtils.module.js";
-import LocalStorage from "../../data/LocalStorage.module.js";
-import capitaliseString from "../../utility/capitaliseString";
-import depluraliseString from "../../utility/depluraliseString.js";
 
 import "./CartPage.style.scss";
 import Modal from "../core/Modal";
@@ -13,9 +7,19 @@ import CartItem from "./CartItem.jsx";
 import AwesomeSvg from "../svg-icons/Awesome.module.jsx";
 import CheckoutForm from "../widgets/Form";
 import AcceptedPaymentTypes from "../widgets/PaymentList.jsx";
+import LocalStorage from "../../data/LocalStorage.module.js";
 
-const { fixPrice } = CommerceUtils;
 const { CustomerDetailsForm, PaymentForm } = CheckoutForm;
+const { GlobeIcon } = AwesomeSvg;
+
+const paymentOptions = [
+  "PayPal",
+  "Apple Pay",
+  "Amazon Pay",
+  "Google Pay",
+  "Debit Card",
+  "Credit Card",
+];
 
 const CartPage = (props) => {
   const cartItemRef = useRef();
@@ -37,17 +41,6 @@ const CartPage = (props) => {
 
   const location = useLocation();
   useEffect(() => () => props.handleLastPath(location.pathname), []);
-
-  const { GlobeIcon } = AwesomeSvg;
-
-  const paymentOptions = [
-    "PayPal",
-    "Apple Pay",
-    "Amazon Pay",
-    "Google Pay",
-    "Debit Card",
-    "Credit Card",
-  ];
 
   useEffect(() => {
     const body = document.querySelector("body");
@@ -111,7 +104,6 @@ const CartPage = (props) => {
       prevTotal = cartTotal;
     });
 
-    // cartTotal = fixPrice(cartTotal);
     LocalStorage.set("cart-total", totalNumberOfItems);
     LocalStorage.set("cart-items", updatedOrder);
 
