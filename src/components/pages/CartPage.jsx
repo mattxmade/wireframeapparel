@@ -12,6 +12,17 @@ import AcceptedPaymentTypes from "../widgets/PaymentList.jsx";
 
 const { CustomerDetailsForm, PaymentForm } = CheckoutForm;
 
+const { GlobeIcon } = AwesomeSvg;
+
+const paymentOptions = [
+  "PayPal",
+  "Apple Pay",
+  "Amazon Pay",
+  "Google Pay",
+  "Debit Card",
+  "Credit Card",
+];
+
 const CartPage = (props) => {
   const cartItemRef = useRef();
 
@@ -20,8 +31,7 @@ const CartPage = (props) => {
   const formBtnRef = useRef();
 
   const checkoutModalRef = useRef();
-  const formSubmissionRef = useRef();
-  formSubmissionRef.current = [];
+  const formSubmissionRef = useRef([]);
 
   const [customerCart, setCustomerCart] = useState(
     LocalStorage.get("cart-items") ?? [...props.itemsInCart]
@@ -32,17 +42,6 @@ const CartPage = (props) => {
 
   const location = useLocation();
   useEffect(() => () => props.handleLastPath(location.pathname), []);
-
-  const { GlobeIcon } = AwesomeSvg;
-
-  const paymentOptions = [
-    "PayPal",
-    "Apple Pay",
-    "Amazon Pay",
-    "Google Pay",
-    "Debit Card",
-    "Credit Card",
-  ];
 
   useEffect(() => {
     const body = document.querySelector("body");
