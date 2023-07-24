@@ -15,7 +15,13 @@ const useSort = () => {
     return ProductSort(method, arrayToSort);
   };
 
-  return { sortBy, handleSortBy };
+  const products = (sortMethod, object) => {
+    if (!object.array) return;
+
+    return object.setState(handleSortBy(sortMethod, object.array));
+  };
+
+  return { sortBy, products };
 };
 
 export default useSort;
