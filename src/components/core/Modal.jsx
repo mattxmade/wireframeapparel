@@ -13,7 +13,7 @@ const Modal = (props) => {
   }, []);
 
   return (
-    <dialog ref={refModal} className="modal">
+    <dialog ref={refModal} className={`modal ${props.className}`}>
       <div className="modal__content">
         <div className="modal-icon">
           <i
@@ -34,9 +34,9 @@ const Modal = (props) => {
 
           <div className="faq-cont">
             <div className="faq-cont__content">
-              <h2> // Built with:</h2>
+              <h2>{props.heading ?? ""}</h2>
               <ul className="faq-cont__content_list">
-                {props.content.map((item, index) => (
+                {props.content?.map((item, index) => (
                   <li key={index}>
                     <p>{item}</p>
                   </li>
@@ -45,9 +45,9 @@ const Modal = (props) => {
             </div>
 
             <div className="faq-cont__content">
-              <h2> // Credits:</h2>
+              <h2>{props.subheading ?? ""}</h2>
               <ul className="faq-cont__content_list">
-                {props.credit.map((item, index) => (
+                {props.credit?.map((item, index) => (
                   <li key={index}>
                     <p>{item}</p>
                   </li>
@@ -56,21 +56,23 @@ const Modal = (props) => {
             </div>
           </div>
 
-          <div className="tab-area__author-info">
-            <p>{`${props.author ? props.author : null} ${
-              props.year ? props.year : null
-            }`}</p>
+          {props.author || props.year || props.children ? (
+            <div className="tab-area__author-info">
+              <p>{`${props.author ? props.author : ""} ${
+                props.year ? props.year : ""
+              }`}</p>
 
-            <ul className="social-links">
-              {props.children
-                ? props.children.map((item, index) => (
+              {props.children ? (
+                <ul className="social-links">
+                  {props.children.map((item, index) => (
                     <li key={index} className="social-icon">
                       {item}
                     </li>
-                  ))
-                : null}
-            </ul>
-          </div>
+                  ))}
+                </ul>
+              ) : null}
+            </div>
+          ) : null}
         </div>
       </div>
     </dialog>
