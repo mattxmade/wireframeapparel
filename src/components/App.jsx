@@ -17,7 +17,6 @@ import LandingPage from "./pages/LandingPage.jsx";
 import BrowsePage from "./pages/BrowsePage.jsx";
 import ProductPage from "./pages/ProductPage.jsx";
 import NoMatchPage from "./pages/NoMatchPage.jsx";
-import CustomisePage from "./pages/CustomisePage.jsx";
 import EnhancedComponent from "./hoc/EnhancedComponent.module.js";
 
 const App = () => {
@@ -144,11 +143,6 @@ const App = () => {
               }
             />
           )}
-
-          <Route
-            path="/customs"
-            element={<CustomisePage handleLastPath={handleLastPath} />}
-          />
 
           <Route
             path={"/search"}
