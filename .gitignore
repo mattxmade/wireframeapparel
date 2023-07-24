@@ -1,1 +1,9 @@
 node_modules
+Thumbs.db
+
+*.ignore.*
+
+*.css
+*.css.map
+*style.css.map
+
