@@ -29,10 +29,6 @@ label {
     );
   }
 
-  input:focus-visible {
-    outline: none;
-  }
-
   svg {
     width: 1.5rem;
     height: auto;
@@ -41,4 +37,8 @@ label {
     position: absolute;
     fill: rgb(150, 150, 150);
   }
+}
+
+label:focus {
+  outline: 0.4rem solid grey;
 }
