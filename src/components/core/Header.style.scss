@@ -37,9 +37,13 @@ header {
   height: fit-content;
   margin: 0.7rem 1rem 1rem;
 
-  background-color: rgb(187, 187, 187);
+  background-color: rgb(160 160 160); // rgb(187, 187, 187)
   box-shadow: 0 0 0.2rem 0.1rem rgb(158, 158, 158),
     inset 0 0 1rem 0.1rem rgb(206, 206, 206);
+}
+
+.header__item:focus {
+  outline: 0.4rem solid grey;
 }
 
 /*==========================
@@ -52,7 +56,7 @@ header {
 
   h1 {
     font-size: 2.5rem;
-    color: aliceblue;
+    color: white;
     width: 11rem;
     text-shadow: 0.1rem 0.1em 3px rgb(122, 122, 122);
   }
@@ -100,9 +104,9 @@ header {
 }
 
 /*================
-  ListItem: Cart
+  ListItem: Widgets
 ==================*/
-.header__item--cart {
+.header__item--widget {
   justify-content: flex-end;
 
   @include mq(mobile) {
@@ -112,6 +116,10 @@ header {
 
   @include mq(tiny) {
     z-index: initial;
+  }
+
+  button:focus {
+    outline: 0.4rem solid darkslategrey;
   }
 }
 
