@@ -18,10 +18,15 @@ const BrowsePage = (props) => {
 
   const [cache, setCache] = useState();
   const [browseResults, setBrowseResults] = useState();
+
+  const browseResultsRef = useRef();
+  browseResultsRef.current = browseResults;
+
   const [productsPerPage, setProductsPerPage] = useState(19);
 
   const sort = useSort();
   const filter = useFilter("browse");
+
   const [category, setCategory] = useState(
     props.clickThroughProductType ??
       LocalStorage.get("category")?.browse ??
@@ -46,14 +51,13 @@ const BrowsePage = (props) => {
     handleFetchProductData(productCategory, productsPerPage);
   };
 
-  const handleSortProducts = (sortProductsBy, array = browseResults) => {
-    if (sort.sortBy === sortProductsBy) return;
-    mapData(sort.handleSortBy(sortProductsBy, array));
-  };
+  const handleSortProducts = (sortProductsBy, array = browseResults) =>
+    sort.products(sortProductsBy, {
+      array,
+      setState: setBrowseResults,
+    });
 
   const handleFilterProducts = (productType, filterProductsBy) => {
-    if (filter.attribute === filterProductsBy) return;
-
     LocalStorage.set("filter", filterProductsBy);
     mapData(filter.handle(productType, filterProductsBy, cache));
   };
@@ -77,7 +81,7 @@ const BrowsePage = (props) => {
       cache
     );
 
-    mapData(sort.handleSortBy(sort.sortBy, filterProducts));
+    handleSortProducts(sort.sortBy, filterProducts);
   };
 
   useEffect(() => cache && handleProcessData(), [cache]);
