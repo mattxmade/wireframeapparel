@@ -7,7 +7,6 @@ import {
 } from "react-router-dom";
 
 import Header from "./core/Header.jsx";
-import Footer from "./core/Footer.jsx";
 import SearchBar from "./widgets/SearchBar.jsx";
 import CartWidget from "./widgets/CartWidget.jsx";
 import LocalStorage from "../data/LocalStorage.module.js";
@@ -74,7 +73,7 @@ const App = () => {
   };
 
   const updateCustomerOrder = (array) => {
-    console.log("App: order update function called");
+    // console.log("App: order update function called");
     setCustomerOrder(array);
   };
 
@@ -179,8 +178,6 @@ const App = () => {
             }
           />
         </Routes>
-
-        <Footer />
       </div>
     </Fragment>
   );
