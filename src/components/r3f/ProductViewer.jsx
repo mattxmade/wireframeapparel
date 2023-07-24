@@ -1,6 +1,9 @@
 import React, { Suspense, useEffect, useRef, useState } from "react";
-import { Canvas, useThree } from "@react-three/fiber";
+import { Canvas, useLoader, useThree } from "@react-three/fiber";
 import { Html, Environment, PresentationControls } from "@react-three/drei";
+
+import lobby from "./r3f-hdrs/st_fagans_interior_1k.hdr";
+import warehouse from "./r3f-hdrs/empty_warehouse_01_1k.hdr";
 
 import Hat from "./Hat";
 import TShirt from "./TShirt";
@@ -16,6 +19,9 @@ const ItemViewerOverlay = ({
 }) => {
   const { size, viewport } = useThree();
 
+  const rotateModelRef = useRef();
+  const wireframeModelRef = useRef();
+
   const CompassIcon = AwesomeSvg.CompassIcon;
   const WireframeIcon = AwesomeSvg.BorderNoneIcon;
 
@@ -23,6 +29,8 @@ const ItemViewerOverlay = ({
     position: [-viewport.width / 2, viewport.height / 2],
     style: { zIndex: 1000 },
   };
+
+  useEffect(() => {}, []);
 
   return (
     <Html as="ul" {...HtmlProps}>
@@ -33,12 +41,41 @@ const ItemViewerOverlay = ({
       >
         {/* rotate view */}
         <li onClick={() => handleRotateView(!rotateView)}>
-          <CompassIcon width="30px" height="30px" fill="white" />
+          <button
+            ref={rotateModelRef}
+            aria-expanded={rotateView}
+            aria-label="Toggle model rotation angle"
+            className="button--highlight"
+          >
+            <i>
+              <CompassIcon width="30px" height="30px" fill="white" />
+            </i>
+          </button>
         </li>
 
         {/* wireframe mode */}
-        <li onClick={() => handleWireframe((prevWireframe) => !prevWireframe)}>
-          <WireframeIcon width={"30px"} height={"30px"} fill={"white"} />
+        <li
+          onClick={() =>
+            handleWireframe((prevWireframe) => {
+              wireframeModelRef.current.setAttribute(
+                "aria-expanded",
+                !prevWireframe
+              );
+
+              return !prevWireframe;
+            })
+          }
+        >
+          <button
+            ref={wireframeModelRef}
+            aria-expanded={false}
+            aria-label="Toggle wireframe material"
+            className="button--highlight"
+          >
+            <i>
+              <WireframeIcon width={"30px"} height={"30px"} fill={"white"} />
+            </i>
+          </button>
         </li>
       </ul>
     </Html>
@@ -55,6 +92,16 @@ const Loadscreen = () => {
   );
 };
 
+const CHROMA_KEY = "#00b140";
+
+const canvasProps = {
+  flat: true,
+  shadows: true,
+  frameloop: "always",
+  dpr: window.devicePixelRatio,
+  camera: { fov: 25, position: [0, 0, 30] },
+};
+
 const ProductViewer = (props) => {
   const [Item, setItem] = useState(() => {
     const type = props.product ? props.product.type.kind : "tshirt";
@@ -63,7 +110,7 @@ const ProductViewer = (props) => {
       case "skateboard":
         return Skateboard.create;
 
-      case "footwear":
+      case "trainers":
         return Trainers.create;
 
       case "hat":
@@ -73,6 +120,8 @@ const ProductViewer = (props) => {
         return TShirt.create;
     }
   });
+
+  const hdr = props.itemColor === "#202020" ? warehouse : lobby;
 
   const [wireframe, setWireframe] = useState(false);
   const [rotation, setRotation] = useState([0, 0, 0]);
@@ -86,16 +135,6 @@ const ProductViewer = (props) => {
 
     setRotation([0, 0, 0]);
   }, [rotateView]);
-
-  const CHROMA_KEY = "#00b140";
-
-  const canvasProps = {
-    flat: true,
-    shadows: true,
-    frameloop: "always",
-    dpr: window.devicePixelRatio,
-    camera: { fov: 25, position: [0, 0, 30] },
-  };
 
   return (
     <div className="canvas-container">
@@ -118,7 +157,7 @@ const ProductViewer = (props) => {
             />
 
             <Environment
-              preset={props.itemColor === "#202020" ? "warehouse" : "lobby"}
+              files={hdr} // hdr
             />
           </PresentationControls>
 
