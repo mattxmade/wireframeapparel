@@ -42,21 +42,14 @@
   --style-box-shaodw-inset: inset 0 0 0.5rem 0.1rem rgb(228, 228, 228);
 }
 
-html {
-  min-height: 100vh;
-}
-
 body {
   font-size: 1.6rem;
-  overflow: hidden;
 }
 
 .wrapper {
   width: 100%;
   height: 100%;
-
   min-height: 100vh;
-  overflow: hidden;
 
   display: flex;
   flex-direction: column;
@@ -124,8 +117,6 @@ main {
   border: transparent;
 }
 
-// layouts - containers
-
 header,
 footer {
   z-index: 2;
@@ -156,7 +147,7 @@ main {
 }
 
 /*===============
-  Screenreaders | https://youtu.be/YAqRQoN8ykI?t=456
+  Screenreaders                                                                  https://youtu.be/YAqRQoN8ykI?t=456
 =================*/
 .sr-only {
   clip: rect(0 0 0 0);
