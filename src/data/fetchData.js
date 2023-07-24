@@ -3,7 +3,7 @@ const fetchData = async (callback, state, atrribute, num) => {
     const response = await callback(atrribute, num);
 
     for (const property of Object.values(state)) {
-      if (response.length) property(response);
+      if (response) property(response);
     }
   } catch (error) {
     console.log("Something went wrong");
