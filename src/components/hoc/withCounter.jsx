@@ -8,18 +8,24 @@ import LocalStorage from "../../data/LocalStorage.module";
 
 const withCounter = (Component) => {
   return (props) => {
-    const [count, setCount] = useState(0);
+    const [count, setCount] = useState(LocalStorage.get("cart-counter") ?? 0);
 
     const handleCount = (arrayOfItems) => {
       let itemInCart = 0;
 
       arrayOfItems.map((item) => (itemInCart += item.quantity));
-      LocalStorage.set("cart-total", itemInCart);
+      LocalStorage.set("cart-counter", itemInCart);
 
       setCount(itemInCart);
     };
 
-    return <Component {...props} count={count} handleCount={handleCount} />;
+    return (
+      <Component
+        {...props}
+        numberOfItemsInCart={count}
+        handleCartCount={handleCount}
+      />
+    );
   };
 };
 
