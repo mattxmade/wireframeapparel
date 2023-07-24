@@ -13,10 +13,12 @@ nav {
   transition: 0.3s;
 }
 .show-nav {
+  visibility: visible;
   transform: translate(0, 0);
 }
 .hide-nav {
-  transform: translate(100%, 0);
+  visibility: hidden;
+  transform: translate(0, -100%);
 }
 
 nav ul {
@@ -61,6 +63,6 @@ nav ul li a {
 
 nav ul li a:hover {
   color: white;
-  background-color: var(--brand-col);
+  background-color: darkslategrey; // var(--brand-col);
   text-decoration: underline;
 }
