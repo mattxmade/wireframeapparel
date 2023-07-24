@@ -137,7 +137,8 @@ aside {
   transition: 0.15s;
 }
 
-.category-title:hover {
+.category-title:hover,
+.category-title:focus {
   background-color: black;
   text-decoration: overline;
 }
@@ -158,10 +159,15 @@ aside {
   }
 }
 
-.subcategory:hover {
+.subcategory:hover,
+.subcategory:focus {
   color: white;
   background-color: black;
   text-decoration: overline;
+}
+
+.subcategory:focus {
+  outline: 0.4rem solid grey;
 }
 
 .category-title--active,
