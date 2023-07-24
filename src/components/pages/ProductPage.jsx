@@ -35,8 +35,6 @@ const ProductPage = (props) => {
 
   const handleSizeSelect = (size) => {
     if (size === sizeSelect) return;
-
-    //product.sizing.size = size;
     setSizeSelect(size);
   };
 
@@ -47,7 +45,6 @@ const ProductPage = (props) => {
 
   useEffect(() => {
     return () => {
-      // console.log("unmounted product page");
       props.handleLastPath(location.pathname);
     };
   }, []);
@@ -87,7 +84,7 @@ const ProductPage = (props) => {
           {/* <p>{product.type.kind}</p> */}
 
           <div className="product-color">
-            <h3 style={{ marginBottom: "0.5rem" }}>
+            <h3 id="color-select" style={{ marginBottom: "0.5rem" }}>
               // color:{" "}
               {itemColor === "Transparent" ? "N/A" : hexToColorName(itemColor)}
             </h3>
@@ -104,16 +101,22 @@ const ProductPage = (props) => {
             >
               {product.color.options.map((col, index) => (
                 <li
+                  tabIndex={itemColor !== "Transparent" ? 0 : 1}
+                  aria-labelledby="color-select"
                   key={index}
-                  onClick={() => handleItemColor(col)}
                   style={{
-                    cursor: "pointer",
-
                     margin: "0.5rem",
                     backgroundColor: col,
+                    cursor: "pointer",
                     boxShadow: "0 0 0.2rem 0.1rem black",
                   }}
-                />
+                  onClick={() => handleItemColor(col)}
+                >
+                  {/* <button
+                    
+                    
+                  /> */}
+                </li>
               ))}
             </ul>
           </div>
@@ -137,8 +140,18 @@ const ProductPage = (props) => {
             >
               {product.sizing.chart.map((size, index) => (
                 <li
+                  tabIndex={0}
                   className="size"
                   key={index}
+                  style={{
+                    cursor: "pointer",
+                    width: "4rem",
+                    height: "auto",
+                    margin: "0.5rem",
+                    textAlign: "center",
+                    backgroundColor: "aliceblue",
+                    boxShadow: "0 0 0.2rem 0.1rem black",
+                  }}
                   onClick={(e) => {
                     sizeHeadingRef.current.style.color = "black";
 
@@ -151,16 +164,8 @@ const ProductPage = (props) => {
                     e.target.style.backgroundColor = "black";
                     handleSizeSelect(size);
                   }}
-                  style={{
-                    cursor: "pointer",
-                    width: "4rem",
-                    height: "auto",
-                    margin: "0.5rem",
-                    textAlign: "center",
-                    backgroundColor: "aliceblue",
-                    boxShadow: "0 0 0.2rem 0.1rem black",
-                  }}
                 >
+                  <span className="sr-only">{`Select size: ${size}`}</span>
                   {size}
                 </li>
               ))}
@@ -169,11 +174,19 @@ const ProductPage = (props) => {
 
           <div className="product-options">
             <div className="quantity-options">
-              <button onClick={(e) => handleQuantity(e.target.textContent)}>
+              <button
+                aria-label="decrease product quantity by 1"
+                className="button--highlight"
+                onClick={(e) => handleQuantity(e.target.textContent)}
+              >
                 <div className="box-mask"></div>-
               </button>
-              <p>{quantity}</p>
-              <button onClick={(e) => handleQuantity(e.target.textContent)}>
+              <h3 aria-label="product quantity">{quantity}</h3>
+              <button
+                aria-label="increase product quantity by 1"
+                className="button--highlight"
+                onClick={(e) => handleQuantity(e.target.textContent)}
+              >
                 +
               </button>
             </div>
