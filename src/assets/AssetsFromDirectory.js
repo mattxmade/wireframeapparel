@@ -9,6 +9,10 @@ const AssetsFromDirectory = (directory, imageType) => {
   };
 
   switch (directory) {
+    case "carousel":
+      getAssets(require.context("./carousel", false, /\.(webp)$/));
+      break;
+
     case "designs":
       getAssets(require.context("./designs", false, /\.(webp)$/));
       break;
