@@ -50,7 +50,7 @@ module.exports = {
         },
       },
       {
-        test: /\.(png|svg|jpg|jpeg|gif|webp|ico|gltf|glb|txt)$/i,
+        test: /\.(png|svg|jpg|jpeg|gif|webp|ico|gltf|glb|hdr|txt)$/i,
         type: "asset/resource",
       },
       {
