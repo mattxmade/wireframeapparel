@@ -1,7 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
+import PropTypes from "prop-types";
 
+import CommerceUtils from "../../utility/CommerceUtils.module.js";
 import LocalStorage from "../../data/LocalStorage.module.js";
+import capitaliseString from "../../utility/capitaliseString";
+import depluraliseString from "../../utility/depluraliseString.js";
 
 import "./CartPage.style.scss";
 import Modal from "../core/Modal";
@@ -10,6 +14,7 @@ import AwesomeSvg from "../svg-icons/Awesome.module.jsx";
 import CheckoutForm from "../widgets/Form";
 import AcceptedPaymentTypes from "../widgets/PaymentList.jsx";
 
+const { fixPrice } = CommerceUtils;
 const { CustomerDetailsForm, PaymentForm } = CheckoutForm;
 
 const CartPage = (props) => {
@@ -52,6 +57,7 @@ const CartPage = (props) => {
 
     return () => {
       body.style.overflowY = "hidden";
+      props.updateCustomerOrder(customerCart);
     };
   }, []);
 
@@ -66,36 +72,28 @@ const CartPage = (props) => {
       ? (itemToUpdate.quantity += 1)
       : (itemToUpdate.quantity -= 1);
 
-    if (itemToUpdate.quantity !== 0) return [...updateCart];
+    if (itemToUpdate.quantity !== 0) return setCustomerCart([...updateCart]);
 
-    return removeItemFromCart(itemVariantID);
+    removeItemFromCart(itemVariantID);
   };
 
   const removeItemFromCart = (itemByVariantID) => {
-    if (customerCart.length === 1) return [];
-    return customerCart.map((item) => item.variant !== itemByVariantID && item);
+    if (customerCart.length === 1) return setCustomerCart([]);
+
+    setCustomerCart((prevCart) =>
+      prevCart.map((item) => item.variant !== itemByVariantID && item)
+    );
   };
 
   const handleCartItem = (item, action) => {
-    let updateCartItems = [];
-
     switch (action) {
       case "increment":
-        updateCartItems = updateItemQuantity(item, action);
-        break;
+        return updateItemQuantity(item, action);
       case "decrement":
-        updateCartItems = updateItemQuantity(item, action);
-        break;
+        return updateItemQuantity(item, action);
       case "remove":
-        updateCartItems = removeItemFromCart(item);
-        break;
+        return removeItemFromCart(item);
     }
-
-    setCustomerCart(updateCartItems);
-    LocalStorage.set("cart-items", updateCartItems);
-
-    props.handleCartCount(updateCartItems);
-    props.updateCustomerOrder(updateCartItems);
   };
 
   useEffect(() => {
@@ -113,8 +111,14 @@ const CartPage = (props) => {
       prevTotal = cartTotal;
     });
 
+    // cartTotal = fixPrice(cartTotal);
+    LocalStorage.set("cart-total", totalNumberOfItems);
+    LocalStorage.set("cart-items", updatedOrder);
+
     setCartOrderTotal(cartTotal);
     setNumberOfItemsInCart(totalNumberOfItems);
+
+    props.handleCartCount(updatedOrder);
   }, [customerCart]);
 
   const handleFormSubmission = (formInputsArray) => {
@@ -133,10 +137,8 @@ const CartPage = (props) => {
   };
 
   const handleElementVisibility = () => {
-    let cartItems = cartItemRef.current ? true : false;
     [formRefA, formRefB].map((ref) => {
-      if (cartItems) cartItemRef.current.style.visibility = "visible";
-
+      cartItemRef.current.style.visibility = "visible";
       formBtnRef.current.setAttribute("aria-expanded", false);
 
       if (ref.current.classList.contains("animate--checkout-form__translate-x"))
@@ -150,12 +152,7 @@ const CartPage = (props) => {
       const input = document.querySelector("input[name=first]");
 
       setTimeout(() => input.focus(), 800);
-
-      if (cartItems)
-        setTimeout(
-          () => (cartItemRef.current.style.visibility = "hidden"),
-          600
-        );
+      setTimeout(() => (cartItemRef.current.style.visibility = "hidden"), 600);
     });
   };
 
