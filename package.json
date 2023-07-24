@@ -44,6 +44,7 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
+    "@pmndrs/assets": "^1.6.0",
     "@react-three/drei": "^9.43.3",
     "@react-three/fiber": "^8.9.1",
     "nanoid": "^4.0.0",
