@@ -14,8 +14,45 @@
   overflow: initial;
 
   @include mq(tablet) {
-    padding: 2rem 2rem 0;
+    padding: 2rem 2rem 1rem;
   }
+}
+
+.cart-page__navbar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+}
+
+.form-visibility-btn {
+  padding: 0.5rem;
+  padding-right: 2rem;
+  gap: 1rem;
+  display: flex;
+  align-items: center;
+  background-color: gainsboro;
+  position: absolute;
+  right: -2rem;
+  top: -0.3rem;
+
+  border-top-left-radius: 0.8rem;
+  border-bottom-left-radius: 0.8rem;
+
+  border: 0.4rem solid transparent;
+
+  h3 {
+    font-size: 1.8rem;
+  }
+}
+.form-visibility-btn:focus {
+  border: 0.4rem solid grey;
+}
+
+.form-visibility-btn:hover {
+  fill: white;
+  color: white;
+  background-color: black;
 }
 
 /*==============
@@ -41,6 +78,7 @@
   flex-direction: row;
 
   @include mq(tablet) {
+    gap: 2rem;
     flex-direction: column-reverse;
   }
 }
@@ -55,6 +93,8 @@
   flex-direction: column;
   background: var(--background);
   position: relative;
+
+  overflow: hidden; // test for form
 }
 
 /*===========
@@ -68,6 +108,25 @@
   width: 100%;
   padding: 2rem;
   background-color: white;
+
+  button {
+    border: 0.4rem solid transparent;
+  }
+  button:hover,
+  button:focus {
+    border: 0.4rem solid grey;
+  }
+
+  a {
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    border: 0.4rem solid transparent;
+  }
+
+  a:focus {
+    border: 0.4rem solid grey;
+  }
 }
 
 .cart-item__overview {
@@ -81,12 +140,16 @@
   Thumbnail
 ============*/
 .cart-item__thumbnail {
-  padding: 1rem;
+  padding: calc(1.5rem - 0.4rem);
   cursor: pointer;
-  width: auto;
+  width: 8rem;
   height: 8rem;
   background-color: rgb(40, 61, 117);
   outline: 0.1rem solid lightgrey;
+
+  @supports not (gap: 1rem) {
+    margin-right: 1rem;
+  }
 }
 
 /*==============
@@ -112,8 +175,13 @@
   Remove Item / Update Quantity
 ================================*/
 .cart-item__edit {
+  gap: 1rem;
   display: flex;
   align-items: center;
+
+  button {
+    outline: 0.1rem solid rgb(238, 238, 238);
+  }
 
   i {
     height: 2.8rem;
@@ -128,7 +196,7 @@
   }
 
   p {
-    top: 0.3rem;
+    top: 0.6rem;
     position: relative;
   }
 
@@ -197,6 +265,8 @@
   flex-direction: column-reverse;
   justify-content: space-around;
 
+  overflow: hidden; // test for form
+
   @include mq(tablet) {
     position: relative;
     gap: 2rem;
@@ -228,13 +298,18 @@
   transition: 0.15s;
   box-shadow: 0 0 0.5rem 0.1rem rgba(65, 65, 65, 0.3);
 
+  @supports not (gap: 2rem) {
+    margin: 0 0 2rem;
+  }
+
   @include mq(tablet) {
     width: 25%;
     font-size: 2rem;
   }
 }
 
-.checkout-button:hover {
+.checkout-button:hover,
+.checkout-button:focus {
   color: white;
   background-color: lightseagreen;
 }
@@ -245,6 +320,7 @@
 .payment-list {
   display: grid;
   border-radius: 1rem;
+  max-height: fit-content;
   grid-template-columns: 1fr 1fr;
   box-shadow: 0 0 0.5rem 0.1rem rgb(177, 177, 177);
 
@@ -271,4 +347,154 @@
 
 .pay-logo-bg {
   fill: lightgrey;
+}
+
+/*===============
+  Checkout Form
+=================*/
+.confirm-order--details,
+.confirm-order--options {
+  visibility: hidden;
+  transform: translate(0, 125%);
+  transition: 0.6s;
+
+  h3 {
+    margin: 1rem 0;
+    font-size: 2rem;
+    top: initial;
+    left: initial;
+    position: relative;
+  }
+
+  form {
+    height: 100%;
+  }
+
+  ul {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    padding: 1rem;
+
+    li {
+      font-size: 1.5rem;
+      display: flex;
+      flex-direction: column;
+
+      label {
+        gap: 0.3rem;
+        width: calc(50% - 3rem);
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
+        position: relative;
+
+        input {
+          flex: auto;
+          width: 100%;
+          padding: 1.5rem 0.5rem;
+          position: relative;
+          left: -0.2rem;
+          border: 0.4rem solid transparent;
+        }
+
+        input:focus {
+          border: 0.4rem solid grey;
+        }
+      }
+    }
+  }
+}
+
+.confirm-input {
+  gap: 3rem;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.confirm-order--details,
+.confirm-order--options {
+  z-index: 10;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(190, 190, 190);
+}
+
+.confirm-order--details {
+  overflow: hidden;
+  overflow-y: scroll;
+
+  p {
+    margin: 0.5rem 0;
+    font-weight: bold;
+    font-size: 1.7rem;
+  }
+
+  ul {
+    // gap: 5rem;
+    // padding: 3rem;
+    justify-content: flex-start;
+
+    li:last-child {
+      position: relative;
+      padding: 0.25rem 1rem;
+      background-color: whitesmoke;
+      height: 11.5rem;
+    }
+  }
+
+  button {
+    width: 30%;
+    margin-top: 3rem;
+    position: absolute;
+    right: 2rem;
+    top: -2rem;
+    font-size: 135%;
+  }
+  button:focus {
+    color: white;
+    background-color: lightseagreen;
+  }
+}
+
+.checkout-select-payment {
+  height: 100%;
+  display: flex;
+
+  select {
+    flex: auto;
+    width: 100%;
+    background-color: azure;
+    padding: 0.5rem;
+    border: 0.4rem solid transparent;
+  }
+  select:focus {
+    border: 0.4rem solid grey;
+  }
+}
+
+.animate--checkout-form__translate-x {
+  visibility: visible;
+  transform: translate(0, 0);
+}
+
+button {
+  position: relative;
+}
+
+.button--inactive {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  position: absolute;
+  background-color: rgb(128, 128, 128, 0.9);
 }
