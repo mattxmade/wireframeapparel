@@ -1,83 +1,6 @@
-import { nanoid } from "nanoid";
-import depluraliseString from "../utility/depluraliseString";
+import { getItemData } from "./product.info";
 import getDataFromFilename from "./product.handlers";
 import AssetsFromDirectory from "../assets/AssetsFromDirectory";
-
-const getRandomIndex = (array) => {
-  return array[Math.floor(Math.random() * array.length)];
-};
-
-const primary = [...new Array(100)].map((x, index) => index);
-const secondary = ["", 50, 95, 99];
-const currencies = ["£", "$"];
-
-const generateRandomPrice = () => {
-  const notes = getRandomIndex(primary);
-  const change = getRandomIndex(secondary);
-
-  return `${notes + 30}${change ? "." : ""}${change}`;
-};
-
-const getID = (category) => {
-  switch (category) {
-    case "hats":
-      return [nanoid()];
-    case "t-shirts":
-      return [
-        "LMFgbsbBv8RTeDEbqKJKe",
-        "2aEcSl_ekwMM6Y_GCfbog",
-        "00P9dkV6fmCyErwinMYtj",
-        "geRQ8GhwTTOKT4aCy18VY",
-        "LCxJOSMdYJtEpe0M4gyZw",
-        "1JGWQbGeEcBWpbBHvQEJS",
-        "wFbU_4XvmZn5uHSW3h614",
-        "1oceKGeKwCAQzteb5i1Rf",
-        "YMiJ8V8-fvksl7M-X8uKn",
-        "uX9nbW8w84OwHZgDA2inz",
-        "U-KE4gfi4w_TL25nLAcat",
-        "gLoSPcCbpg16dfLB_xKTb",
-        "BY7Fwrspg6IFXHIOUiwrZ",
-        "pHCBfYFkA6PrDvdcd-eE8",
-        "qa4egQOw0WasJLyjEypRc",
-        "DaT-r7dc5SqtrN8s4J2A5",
-        "CnyU3y-fBeuGKSx3nVnNT",
-        "unPoj_1511ojV9NiA9gEn",
-        "rK0MxlyyfsunQxKGm22xt",
-        "xysapOFyBKs39pbUJTbQQ",
-      ];
-    case "footwear":
-      return ["7xrCc79aOUwIeM5D7wMaF"];
-    case "skateboards":
-      return [
-        "AlS6z5Lcg1ZC0f5cLoHly",
-        "UJYCwGjF-nngIDSQtQOyS",
-        "LhG2ft1-OtV7-h5VYOPs8",
-        "EkRWRo_R7JPwMkf-kxJt1",
-        "q8DYE-YXwVMAJGIJtzpWE",
-        "kBgd7lvFf82RfpPAF4yPb",
-        "TouMNaddorvFGAgPrVXY4",
-        "H6GQfygOyGtEC8QycxGQx",
-        "RAXnppvfb9aQlZ9EnYqgW",
-        "kU3Rxt3_iOzXx4o87FNmd",
-        "8ChzExZaYsNOnZ64EOZte",
-        "vNIWNEFBXf-CzBLABL6r5",
-        "JYIs0XYEE8fSko8uvu-Ku",
-      ];
-  }
-};
-
-const getPrice = (category) => {
-  switch (category) {
-    case "t-shirts":
-      return 35;
-    case "hats":
-      return 25;
-    case "footwear":
-      return 60;
-    case "skateboards":
-      return 70;
-  }
-};
 
 const ProductData = (() => {
   const productImages = {
@@ -91,17 +14,12 @@ const ProductData = (() => {
   const _createProducts = (key) =>
     productImages[key].map((productImage, index) => {
       const type = {
-        kind: depluraliseString(key),
+        kind: getDataFromFilename.type(productImage.name),
         category: key,
       };
+      const id = getItemData(type.category)[index].id;
+      const price = getItemData(type.category)[index].price;
 
-      //const id = nanoid();
-      const id = getID(type.category)[index];
-
-      //const price = generateRandomPrice();
-      const price = getPrice(type.category);
-
-      // offset options: png | jpg | webp
       const imageType = "webp";
       let offset = imageType === "webp" ? 1 : 0;
 
@@ -138,16 +56,6 @@ const ProductData = (() => {
         alt: `${name} ${type}`,
       };
 
-      // const product = {
-      //   index,
-      //   id,
-      // };
-
-      // for (const [key, value] of Object.entries(product)) {
-      //   console.log(`${key}: ${value}`);
-      //   if (key === "id") console.log(" ");
-      // }
-
       return {
         index,
         id,
@@ -165,7 +73,6 @@ const ProductData = (() => {
 
   // create product data
   const categories = {
-    // hats: _createProducts("hats"),
     "t-shirts": _createProducts("t-shirts"),
     footwear: _createProducts("footwear"),
     skateboards: _createProducts("skateboards"),
@@ -173,9 +80,14 @@ const ProductData = (() => {
 
   // API
   const _getProductById = (id) => {
+    let productMatch;
+
     for (const [key, array] of Object.entries(categories)) {
-      return array.find((product) => product.id === id);
+      productMatch = array.find((product) => product.id === id);
+
+      if (productMatch) break;
     }
+    return productMatch;
   };
 
   const _getProductsByCategory = (number, category) => {
