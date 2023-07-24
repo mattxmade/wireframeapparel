@@ -5,9 +5,6 @@ const SearchBar = (props) => {
   const HandleSearchInput = (e) => {
     e.preventDefault();
 
-    // modern props.searchInput.replace(/\+/g, " ");
-    // legacy props.searchInput.replaceAll("+", " ");
-
     const regex = /^[a-z0-9 ]*$/i;
     regex.test(e.target.value.toLowerCase().slice(-1))
       ? props.handleSearchQuery(e.target.value.toLowerCase())
