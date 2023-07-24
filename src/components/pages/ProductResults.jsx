@@ -22,6 +22,15 @@ const ProductResults = (props) => {
     aside.classList.add("aside-open");
   };
 
+  useEffect(() => {
+    if (window.innerHeight >= 615) document.body.style.overflow = "hidden";
+    else document.body.style.overflowX = "hidden";
+
+    return () => {
+      document.body.style.overflow = "initial";
+    };
+  }, []);
+
   return (
     <Fragment>
       <main className={`main--${view.type}`}>
