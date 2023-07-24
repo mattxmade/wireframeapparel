@@ -1,6 +1,7 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import "../pages/CartPage.style.scss";
+import { checkoutPlaceholder } from "../../data/placeholderContent";
 import CommerceUtils from "../../utility/CommerceUtils.module";
 
 const CheckoutForm = (() => {
@@ -31,20 +32,22 @@ const CheckoutForm = (() => {
               <label htmlFor="first">
                 first
                 <input
+                  required
                   name="first"
                   type="text"
-                  required
-                  placeholder="first name"
+                  value={firstName}
+                  placeholder={!firstName && checkoutPlaceholder.first}
                   onChange={(e) => setFirstName(e.target.value)}
                 />
               </label>
               <label htmlFor="last">
                 last
                 <input
+                  required
                   name="last"
                   type="text"
-                  required
-                  placeholder="last name"
+                  value={lastName}
+                  placeholder={!lastName && checkoutPlaceholder.last}
                   onChange={(e) => setLastName(e.target.value)}
                 />
               </label>
@@ -54,22 +57,24 @@ const CheckoutForm = (() => {
               <label htmlFor="email">
                 email
                 <input
+                  required
                   className="confirm-email"
                   name="email"
                   type="email"
-                  required
-                  placeholder="holmes@gmail.com"
+                  value={email}
+                  placeholder={!email && checkoutPlaceholder.email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </label>
               <label htmlFor="telephone">
                 telephone
                 <input
+                  required
                   className="confirm-telephone"
                   name="telephone"
                   type="telephone"
-                  required
-                  placeholder="Contact number"
+                  value={telephone}
+                  placeholder={!telephone && checkoutPlaceholder.telephone}
                   onChange={(e) => setTelephone(e.target.value)}
                 />
               </label>
@@ -80,10 +85,11 @@ const CheckoutForm = (() => {
               <label htmlFor="address-1">
                 address 1
                 <input
+                  required
                   name="address-1"
                   type="text"
-                  required
-                  placeholder="221B"
+                  value={address}
+                  placeholder={!address && checkoutPlaceholder.address}
                   onChange={(e) => setAddress(e.target.value)}
                 />
               </label>
@@ -91,30 +97,35 @@ const CheckoutForm = (() => {
               <label htmlFor="address-2">
                 address 2
                 <input
+                  required
                   name="address-2"
                   type="text"
-                  required
-                  placeholder="Baker Street"
+                  value={street}
+                  placeholder={!street && checkoutPlaceholder.street}
                   onChange={(e) => setStreet(e.target.value)}
                 />
               </label>
+
               <label htmlFor="city">
                 city
                 <input
+                  required
                   name="city"
                   type="text"
-                  required
-                  placeholder="London"
+                  value={city}
+                  placeholder={!city && checkoutPlaceholder.city}
                   onChange={(e) => setCity(e.target.value)}
                 />
               </label>
+
               <label htmlFor="postcode">
                 postcode
                 <input
+                  required
                   name="postcode"
                   type="text"
-                  required
-                  placeholder="NW1 6XE"
+                  value={postcode}
+                  placeholder={!postcode && checkoutPlaceholder.postcode}
                   onChange={(e) => setPostcode(e.target.value)}
                 />
               </label>
@@ -125,11 +136,12 @@ const CheckoutForm = (() => {
             <h3>{`Order Total: £${fixPrice(props.cartOrderTotal + 3.5)}`}</h3>
             <p>{`Items: ${props.numberOfItemsInCart}`}</p>
             <p>Delivery: £3.50</p>
+
             <div className="confirm-input">
               <button
                 type="submit"
                 className="checkout-button action-button"
-                onClick={() =>
+                onClick={(e) => {
                   props.handleFormSubmission([
                     firstName,
                     lastName,
@@ -139,8 +151,8 @@ const CheckoutForm = (() => {
                     street,
                     city,
                     postcode,
-                  ])
-                }
+                  ]);
+                }}
               >
                 Confirm & Pay
                 {props.numberOfItemsInCart === 0 ? (
@@ -164,6 +176,7 @@ const CheckoutForm = (() => {
       <ul>
         <li>
           <h3>Payment</h3>
+
           <div className="confirm-input">
             <label className="checkout-select-payment" htmlFor="type">
               type
@@ -172,7 +185,6 @@ const CheckoutForm = (() => {
                 name="type"
                 id="payment-type"
                 form="form--checkout"
-                placeholder="payment method"
                 onChange={handlePaymentType}
               >
                 {props.paymentOptions.map((option, index) => (
@@ -180,11 +192,13 @@ const CheckoutForm = (() => {
                 ))}
               </select>
             </label>
+
             <label htmlFor="promo">
               promocode <input name="promo" type="text" />
             </label>
           </div>
         </li>
+
         <li>
           <h3>Delivery Charge: £3.50</h3>
         </li>
