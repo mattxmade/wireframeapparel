@@ -1,5 +1,5 @@
 {
-  "name": "shopping-cart",
+  "name": "wireframe-apparel",
   "version": "1.0.0",
   "description": "Online storefront built with React",
   "private": true,
@@ -10,15 +10,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mattxmade/shopping-cart.git"
+    "url": "git+https://github.com/mattxmade/wireframeapparel.git"
   },
   "keywords": [],
   "author": "mattxmade",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/mattxmade/shopping-cart/issues"
+    "url": "https://github.com/mattxmade/wireframeapparel/issues"
   },
-  "homepage": "https://github.com/mattxmade/shopping-cart#readme",
+  "homepage": "https://github.com/mattxmade/wireframeapparel#readme",
   "devDependencies": {
     "@babel/core": "^7.20.2",
     "@babel/preset-env": "^7.20.2",
