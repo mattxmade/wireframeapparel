@@ -50,7 +50,7 @@ const CartPage = (props) => {
 
     return () => {
       body.style.overflowY = "hidden";
-      props.updateCustomerOrder(customerCart);
+      //props.updateCustomerOrder(customerCart);
     };
   }, []);
 
@@ -110,7 +110,19 @@ const CartPage = (props) => {
     setCartOrderTotal(cartTotal);
     setNumberOfItemsInCart(totalNumberOfItems);
 
-    props.handleCartCount(updatedOrder);
+    // bug: recursive loop due to updating state inside useEffect
+    // fix: guard clause to only update if items in cart are not equal
+    if (props.itemsInCart.length !== updatedOrder.length) {
+      props.updateCustomerOrder(updatedOrder);
+      return;
+    }
+
+    // fix: guard clause to only update if item quantity notequal
+    props.itemsInCart.length &&
+      props.itemsInCart.map((item, idx) => {
+        if (updatedOrder[idx].quantity !== item.quantity)
+          props.updateCustomerOrder(updatedOrder);
+      });
   }, [customerCart]);
 
   const handleFormSubmission = (formInputsArray) => {
