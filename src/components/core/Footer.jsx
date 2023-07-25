@@ -50,7 +50,7 @@ const Footer = (props) => {
         icons={[TwitterIcon]}
       >
         <ExternalLink
-          link="https://github.com/mattxmade/shopping-cart"
+          link="https://github.com/mattxmade/wireframeapparel"
           screenreader="GitHub"
         >
           <GitHubIcon />
@@ -68,7 +68,7 @@ const Footer = (props) => {
         <ul>
           <li>
             <ExternalLink
-              link="https://github.com/mattxmade/shopping-cart"
+              link="https://github.com/mattxmade/wireframeapparel"
               screenreader="GitHub"
             >
               <GitHubIcon />
