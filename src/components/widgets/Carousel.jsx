@@ -43,6 +43,7 @@ const Carousel = (props) => {
   const carouselRef = useRef();
 
   const autoplayRef = useRef();
+  const autoplayIntervalRef = useRef();
   const [autoplay, setAutoplay] = useState(true);
 
   const [unit, setUnit] = useState(isLargeViewport() ? "vw" : "vh");
@@ -121,16 +122,34 @@ const Carousel = (props) => {
     }
   };
 
+  const mountAutoplay = () => {
+    autoplayIntervalRef.current = setTimeout(() => {
+      setInterval(() => autoplaySlides(), 7000);
+    }, 5000);
+  };
+
+  const unmountAutoplay = () => {
+    clearInterval(autoplayIntervalRef.current);
+  };
+
+  const resumeAutoplay = () => {
+    mountAutoplay();
+    setAutoplay(true);
+  };
+
+  const pauseAutoplay = () => {
+    unmountAutoplay();
+    setAutoplay(false);
+  };
+
   useEffect(() => {
     window.addEventListener("resize", handleViewportChange);
     tabsRef.current.childNodes[0].classList.add("illuminate-tab");
 
-    const autoplayInterval = setTimeout(() => {
-      setInterval(() => autoplaySlides(), 7000);
-    }, 5000);
+    mountAutoplay();
 
     return () => {
-      clearInterval(autoplayInterval);
+      unmountAutoplay();
       window.removeEventListener("resize", handleViewportChange);
     };
   }, []);
@@ -219,7 +238,7 @@ const Carousel = (props) => {
               <button
                 aria-controls="play"
                 className="icon--select"
-                onClick={() => setAutoplay(true)}
+                onClick={resumeAutoplay}
               >
                 <span className="sr-only">play</span>
                 <i style={mediaIconStyle}>
@@ -230,7 +249,7 @@ const Carousel = (props) => {
               <button
                 aria-controls="carousel"
                 className="icon--select"
-                onClick={() => setAutoplay(false)}
+                onClick={pauseAutoplay}
               >
                 <span className="sr-only">pause</span>
                 <i style={mediaIconStyle}>
