@@ -54,9 +54,9 @@ const Carousel = (props) => {
 
   const images = AssetsFromDirectory("carousel");
 
-  let currentImage = 0;
-  let currentPosition = 0;
-  let imageCount = images.length - 1;
+  const currImage = useRef(0);
+  const currPostion = useRef(0);
+  const imgCount = useRef(images.length - 1);
 
   const ChevronLeft = Chevron.left;
   const ChevronRight = Chevron.right;
@@ -78,15 +78,19 @@ const Carousel = (props) => {
 
     tabsRef.current.childNodes[0].classList.add("illuminate-tab");
 
-    currentImage = 0;
-    currentPosition = 0;
+    currImage.current = 0;
+    currPostion.current = 0;
   };
 
   const autoplaySlides = (playState) => {
-    if (autoplayRef.current && carouselRef.current && currentImage < imageCount)
+    if (
+      autoplayRef.current &&
+      carouselRef.current &&
+      currImage.current < imgCount.current
+    )
       moveToNextSlide();
 
-    if (currentImage === 4) {
+    if (currImage.current === 4) {
       const resetTimeout = setTimeout(() => {
         resetSlides();
         clearTimeout(resetTimeout);
@@ -95,30 +99,34 @@ const Carousel = (props) => {
   };
 
   const moveToPrevSlide = (e) => {
-    if (currentImage >= 1) {
-      carouselRef.current.style.transform = `translate(${(currentPosition +=
+    if (currImage.current >= 1) {
+      carouselRef.current.style.transform = `translate(${(currPostion.current +=
         widthRef.current)}${unitRef.current}, 0)`;
 
       tabsRef.current.childNodes.forEach((tab) =>
         tab.classList.remove("illuminate-tab")
       );
 
-      currentImage--;
-      tabsRef.current.childNodes[currentImage].classList.add("illuminate-tab");
+      currImage.current--;
+      tabsRef.current.childNodes[currImage.current].classList.add(
+        "illuminate-tab"
+      );
     }
   };
 
   const moveToNextSlide = (e) => {
-    if (currentImage < imageCount) {
-      carouselRef.current.style.transform = `translate(${(currentPosition -=
+    if (currImage.current < imgCount.current) {
+      carouselRef.current.style.transform = `translate(${(currPostion.current -=
         widthRef.current)}${unitRef.current}, 0)`;
 
       tabsRef.current.childNodes.forEach((tab) =>
         tab.classList.remove("illuminate-tab")
       );
 
-      currentImage++;
-      tabsRef.current.childNodes[currentImage].classList.add("illuminate-tab");
+      currImage.current++;
+      tabsRef.current.childNodes[currImage.current].classList.add(
+        "illuminate-tab"
+      );
     }
   };
 
@@ -140,6 +148,16 @@ const Carousel = (props) => {
   const pauseAutoplay = () => {
     unmountAutoplay();
     setAutoplay(false);
+  };
+
+  const manualPrevSlide = () => {
+    pauseAutoplay();
+    moveToPrevSlide();
+  };
+
+  const manualNextSlide = () => {
+    pauseAutoplay();
+    moveToNextSlide();
   };
 
   useEffect(() => {
@@ -185,7 +203,11 @@ const Carousel = (props) => {
         <div className="carousel-viewer">
           <div className="carousel-border"></div>
           <div className="carousel__navigators">
-            <button className="icon--select" onClick={moveToPrevSlide}>
+            <button
+              aria-controls="carousel"
+              className="icon--select"
+              onClick={manualPrevSlide}
+            >
               <span className="sr-only">previous slide</span>
               <i className="fas fa-chevron-left  chevron">
                 <ChevronLeft />
@@ -195,7 +217,7 @@ const Carousel = (props) => {
             <button
               aria-controls="carousel"
               className="icon--select"
-              onClick={moveToNextSlide}
+              onClick={manualNextSlide}
             >
               <span className="sr-only">next slide</span>
               <i className="fas fa-chevron-right chevron">
@@ -228,7 +250,7 @@ const Carousel = (props) => {
               <li
                 key={index}
                 className="image-tab"
-                style={{ width: `calc(100${unit}/${imageCount + 1})` }}
+                style={{ width: `calc(100${unit}/${imgCount.current + 1})` }}
               />
             ))}
           </ul>
