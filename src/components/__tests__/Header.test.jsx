@@ -1,4 +1,5 @@
 import React, { Fragment } from "react";
+import { HashRouter } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 
 import "@testing-library/jest-dom";
@@ -13,11 +14,13 @@ const BasketWidget = jest.fn(() => <Fragment />);
 describe("Header Component tests", () => {
   it("Renders Header component", () => {
     const { asFragment } = render(
-      <Header>
-        <SearchBar />
-        <Nav />
-        <BasketWidget />
-      </Header>
+      <HashRouter>
+        <Header>
+          <SearchBar />
+          <Nav />
+          <BasketWidget />
+        </Header>
+      </HashRouter>
     );
 
     expect(asFragment).toMatchSnapshot();
@@ -25,24 +28,28 @@ describe("Header Component tests", () => {
 
   it("Renders correct number of list items", () => {
     render(
-      <Header>
-        <SearchBar />
-        <Nav />
-        <BasketWidget />
-      </Header>
+      <HashRouter>
+        <Header>
+          <SearchBar />
+          <Nav />
+          <BasketWidget />
+        </Header>
+      </HashRouter>
     );
 
     const listItems = screen.getAllByRole("listitem");
-    expect(listItems.length).toEqual(3);
+    expect(listItems.length).toEqual(7);
   });
 
   it("Renders h1", () => {
     render(
-      <Header>
-        <SearchBar />
-        <Nav />
-        <BasketWidget />
-      </Header>
+      <HashRouter>
+        <Header>
+          <SearchBar />
+          <Nav />
+          <BasketWidget />
+        </Header>
+      </HashRouter>
     );
 
     const heading = screen.getByRole("heading");
@@ -51,11 +58,13 @@ describe("Header Component tests", () => {
 
   it("Renders image", () => {
     render(
-      <Header>
-        <SearchBar />
-        <Nav />
-        <BasketWidget />
-      </Header>
+      <HashRouter>
+        <Header>
+          <SearchBar />
+          <Nav />
+          <BasketWidget />
+        </Header>
+      </HashRouter>
     );
 
     const image = screen.getByRole("img");
