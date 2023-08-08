@@ -5,7 +5,7 @@ import "./Dropdown.style.scss";
 import AwesomeSvg from "../svg-icons/Awesome.module";
 import LocalStorage from "../../data/LocalStorage.module";
 
-const Dropdown = ({ children, handleSortProductsBy }) => {
+const Dropdown = ({ options, handleSortProductsBy }) => {
   const dropdownRef = useRef();
   const restoreSelection = LocalStorage.get("sort");
 
@@ -20,15 +20,19 @@ const Dropdown = ({ children, handleSortProductsBy }) => {
     return () => window.removeEventListener("click", closeDropdown);
   }, []);
 
-  const toggleRef = useRef();
   const [toggleDropdown, setToggleDropdown] = useState(false);
-  const [selection, setSelection] = useState(children[0]);
+  const [selection, setSelection] = useState(options[0]);
 
-  const closeDropdown = () => {
-    if (toggleRef.current) setToggleDropdown(false);
+  const closeDropdown = (e) => {
+    const element = e.srcElement; // srcElement : li.dropdown-selected
+
+    // Return here as dropdown just opened
+    if (element && element.classList.contains("dropdown-option")) return;
+    // Close dropdown otherwise | [similar to select element]
+    else setToggleDropdown(false);
   };
 
-  const sortOptions = children;
+  const sortOptions = options;
   const CaretDown = AwesomeSvg.CaretDownIcon;
 
   const dropdownStyle = {
@@ -59,7 +63,6 @@ const Dropdown = ({ children, handleSortProductsBy }) => {
   };
 
   useEffect(() => {
-    toggleRef.current = toggleDropdown;
     dropdownRef.current.setAttribute("aria-expanded", toggleDropdown);
   }, [toggleDropdown]);
 
@@ -75,8 +78,8 @@ const Dropdown = ({ children, handleSortProductsBy }) => {
         role="button"
         aria-label="Sort products dropdown menu button"
         style={dropdownStyle.option}
-        className="dropdown-selected"
-        onClick={() => setTimeout(() => setToggleDropdown(!toggleDropdown), 0)}
+        className="dropdown-selected dropdown-option"
+        onClick={() => setToggleDropdown(!toggleDropdown)} // setTimeout(() => setToggleDropdown(!toggleDropdown), 0)}
         onKeyDown={(e) =>
           e.code === "Space" || e.code === "Enter" || e.code === "NumpadEnter"
             ? setToggleDropdown(!toggleDropdown)
@@ -90,7 +93,7 @@ const Dropdown = ({ children, handleSortProductsBy }) => {
         sortOptions.map((option, index) => (
           <li
             key={index}
-            className="dropdown-choice"
+            className="dropdown-choice dropdown-option"
             style={dropdownStyle.option}
             onClick={(e) => {
               handleSortOption(e.target.textContent);
@@ -115,7 +118,7 @@ const Dropdown = ({ children, handleSortProductsBy }) => {
 };
 
 Dropdown.propTypes = {
-  children: PropTypes.node,
+  options: PropTypes.array,
   handleSetSort: PropTypes.func,
   handleSortProductsBy: PropTypes.func,
 };
