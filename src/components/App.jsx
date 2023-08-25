@@ -17,7 +17,6 @@ import LandingPage from "./pages/LandingPage.jsx";
 import BrowsePage from "./pages/BrowsePage.jsx";
 import ProductPage from "./pages/ProductPage.jsx";
 import NoMatchPage from "./pages/NoMatchPage.jsx";
-import EnhancedComponent from "./hoc/EnhancedComponent.module.js";
 
 const App = () => {
   const [productPagePath, setProductPagePath] = useState("");
@@ -68,12 +67,14 @@ const App = () => {
 
     const currentOrder = handleOrder();
     LocalStorage.set("cart-items", currentOrder);
+
+    handleItemCount(currentOrder);
     setCustomerOrder(currentOrder);
   };
 
-  const updateCustomerOrder = (array) => {
-    // console.log("App: order update function called");
-    setCustomerOrder(array);
+  const updateCustomerOrder = (updatedOrderArray) => {
+    LocalStorage.set("cart-items", updatedOrderArray);
+    setCustomerOrder(updatedOrderArray);
   };
 
   const handleSearchInput = (string) => {
@@ -97,11 +98,17 @@ const App = () => {
   // Fallback to last path when search input is cleared
   const handleLastPath = (path) => setLastPath(path);
 
-  // Higher-Order Component Abstraction Module
-  const { create, HOC } = EnhancedComponent;
+  const [itemCount, setitemCount] = useState(
+    LocalStorage.get("item-count") ?? 0
+  );
 
-  const CartPageWithCounter = create(CartPage, HOC.withCounter);
-  const CartWidgetWithCounter = create(CartWidget, HOC.withCounter);
+  const handleItemCount = (array) => {
+    let itemsInCart = 0;
+    array.map((item) => (itemsInCart += item.quantity));
+
+    LocalStorage.set("item-count", itemsInCart);
+    setitemCount(itemsInCart);
+  };
 
   return (
     <Fragment>
@@ -111,7 +118,7 @@ const App = () => {
             searchInput={searchInput}
             handleSearchQuery={handleSearchQuery}
           />
-          <CartWidgetWithCounter customerOrder={customerOrder} />
+          <CartWidget itemCount={itemCount} />
         </Header>
 
         <Routes>
@@ -157,8 +164,9 @@ const App = () => {
           <Route
             path="/checkout"
             element={
-              <CartPageWithCounter
+              <CartPage
                 itemsInCart={customerOrder}
+                handleItemCount={handleItemCount}
                 updateCustomerOrder={updateCustomerOrder}
                 handleLastPath={handleLastPath}
               />
