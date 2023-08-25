@@ -103,7 +103,7 @@ const canvasProps = {
 };
 
 const ProductViewer = (props) => {
-  const [Item, setItem] = useState(() => {
+  const [ProductItem, setProductItem] = useState(() => {
     const type = props.product ? props.product.type.kind : "tshirt";
 
     switch (type) {
@@ -150,7 +150,7 @@ const ProductViewer = (props) => {
             polar={[-Math.PI / 4, Math.PI / 4]} // Vertical limits
             azimuth={[-Infinity, Infinity]} // Horizontal limits
           >
-            <Item
+            <ProductItem
               wireframe={wireframe}
               product={props.product}
               itemColor={props.itemColor ? props.itemColor : "white"}
