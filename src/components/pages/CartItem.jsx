@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import AwesomeSvg from "../svg-icons/Awesome.module";
 import CommerceUtils from "../../utility/CommerceUtils.module";
 
+const { fixPrice } = CommerceUtils;
 const { capitaliseString, depluraliseString } = CommerceUtils;
 const { AngleUpIcon, AngleDownIcon, TrashIcon } = AwesomeSvg;
 
@@ -14,7 +15,7 @@ const CartItem = (props) => {
   return (
     <Fragment>
       <Link
-        to={`/shop`}
+        to={`/shop/${item.id}`}
         onKeyDown={(e) => {
           if (e.code === "NumpadEnter" || e.code === "Enter") {
             // TODO search for product
@@ -37,7 +38,7 @@ const CartItem = (props) => {
 
           {/* <p>{"£" + fixPrice(item.price * item.quantity)}</p> */}
           <li className="cart-item__price">
-            {"£" + item.price * item.quantity}
+            {"£" + fixPrice(item.price * item.quantity)}
           </li>
         </ul>
 
