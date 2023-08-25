@@ -8,7 +8,9 @@ import AwesomeSvg from "../svg-icons/Awesome.module.jsx";
 import CheckoutForm from "../widgets/Form";
 import AcceptedPaymentTypes from "../widgets/PaymentList.jsx";
 import LocalStorage from "../../data/LocalStorage.module.js";
+import CommerceUtils from "../../utility/CommerceUtils.module.js";
 
+const { fixPrice } = CommerceUtils;
 const { CustomerDetailsForm, PaymentForm } = CheckoutForm;
 const { GlobeIcon } = AwesomeSvg;
 
@@ -50,7 +52,6 @@ const CartPage = (props) => {
 
     return () => {
       body.style.overflowY = "hidden";
-      //props.updateCustomerOrder(customerCart);
     };
   }, []);
 
@@ -104,25 +105,13 @@ const CartPage = (props) => {
       prevTotal = cartTotal;
     });
 
-    LocalStorage.set("cart-total", totalNumberOfItems);
-    LocalStorage.set("cart-items", updatedOrder);
+    cartTotal = fixPrice(cartTotal);
 
     setCartOrderTotal(cartTotal);
     setNumberOfItemsInCart(totalNumberOfItems);
 
-    // bug: recursive loop due to updating state inside useEffect
-    // fix: guard clause to only update if items in cart are not equal
-    if (props.itemsInCart.length !== updatedOrder.length) {
-      props.updateCustomerOrder(updatedOrder);
-      return;
-    }
-
-    // fix: guard clause to only update if item quantity notequal
-    props.itemsInCart.length &&
-      props.itemsInCart.map((item, idx) => {
-        if (updatedOrder[idx].quantity !== item.quantity)
-          props.updateCustomerOrder(updatedOrder);
-      });
+    props.handleItemCount(updatedOrder);
+    props.updateCustomerOrder(updatedOrder);
   }, [customerCart]);
 
   const handleFormSubmission = (formInputsArray) => {
