@@ -58,11 +58,14 @@ const ProductResults = (props) => {
               <h3>// {capitaliseString(props.productCategory)}</h3>
             </li>
             <li>
-              <Dropdown handleSortProductsBy={view.handleSortProducts}>
-                {"Name: A-Z"}
-                {"Price: Low to High"}
-                {"Price: High to Low"}
-              </Dropdown>
+              <Dropdown
+                handleSortProductsBy={view.handleSortProducts}
+                options={[
+                  "Name: A-Z",
+                  "Price: Low to High",
+                  "Price: High to Low",
+                ]}
+              />
             </li>
           </ul>
 
@@ -74,8 +77,3 @@ const ProductResults = (props) => {
 };
 
 export default ProductResults;
-
-// ProductResults.propTypes = {
-//   clickThroughProductType: PropTypes.string,
-//   handleProductSelection: PropTypes.func,
-// };
