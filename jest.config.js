@@ -4,7 +4,7 @@ const config = {
   moduleFileExtensions: [...defaults.moduleFileExtensions, "mts", "cts"],
 
   moduleNameMapper: {
-    "^[./a-zA-Z0-9$_-]+\\.(css|png|gif|webp|svg|ttf|woff|woff2|mp4|webm|mp3|glb)$":
+    "^[./a-zA-Z0-9$_-]+\\.(css|png|gif|webp|svg|ttf|woff|woff2|mp4|webm|mp3|glb|hdr)$":
       "<rootDir>/src/components/__mocks__/AssetMock.js",
     "\\.(css|less|scss)$": "<rootDir>/src/components/__mocks__/styleMock.js",
   },
