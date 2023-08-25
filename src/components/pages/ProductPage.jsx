@@ -65,7 +65,7 @@ const ProductPage = (props) => {
         <ProductViewer product={product} itemColor={itemColor} />
 
         <div className="product-details">
-          <h2 className="product-name">
+          <h2 title="product-name" className="product-name">
             {product.name} {product.type.kind}
             <p>{` by ${product.brand}`}</p>
           </h2>
