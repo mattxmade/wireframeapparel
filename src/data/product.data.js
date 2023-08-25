@@ -53,7 +53,7 @@ const ProductData = (() => {
       const image = {
         src: productImage.uri,
         design: design.uri,
-        alt: `${name} ${type}`,
+        alt: `${name} ${type.kind}`,
       };
 
       return {
