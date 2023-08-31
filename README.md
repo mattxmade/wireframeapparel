@@ -323,33 +323,6 @@ This allows the product design to occupy different positions on the 3D model.
 > </Canvas>
 > ```
 
-### Subheading
-
-#### Introduction
-words here
-
-#### Section 1
-
-words here
-
-#### Section 2
-
-words here
-
-###
-
-> #### Code Heading
-> ```js
-> /*
->   [filename].[ext]
->     ¬ extract
-> */
-> ```
-
-<br>
-
-Full implementation <a href="#">@link</a>
-
 <br>
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
