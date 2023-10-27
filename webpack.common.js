@@ -11,6 +11,12 @@ module.exports = {
       minify: true,
       favicon: "./src/favicon.ico",
       title: "Wireframe Apparel",
+      meta: {
+        description: {
+          name: "description",
+          content: "Wireframe Apparel - reactive fashion",
+        },
+      },
       template: "./src/index.html",
     }),
     new CopyPlugin({
